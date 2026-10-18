@@ -1,0 +1,40 @@
+name: build-and-test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+
+jobs:
+  build-and-test:
+    name: Сборка и тесты
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Установить .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Восстановить пакеты
+        run: dotnet restore RecursiveLab.sln
+
+      - name: Собрать (Release)
+        run: dotnet build RecursiveLab.sln --no-restore --configuration Release
+
+      - name: Тесты
+        run: dotnet test tests/RecursiveLab.Tests/RecursiveLab.Tests.csproj --no-build --configuration Release --verbosity normal
