@@ -1,0 +1,151 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:RecursiveLab.App.Controls"
+             x:Class="RecursiveLab.App.Views.Pages.HTreePage">
+
+  <Grid ColumnDefinitions="*,336">
+
+    <!-- Полотно фрактала -->
+    <Border Grid.Column="0"
+            Classes="card"
+            Padding="0"
+            Margin="0,0,18,0"
+            ClipToBounds="True">
+      <Panel>
+        <controls:HTreeCanvas Name="TreeCanvas" />
+
+        <Border Classes="hud"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Margin="16">
+          <StackPanel Spacing="1">
+            <TextBlock Text="H-TREE" Classes="section" />
+            <TextBlock Name="HudSegments" Text="0 отрезков" FontSize="11.5" />
+          </StackPanel>
+        </Border>
+
+        <Border Classes="hud"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Top"
+                Margin="16">
+          <TextBlock Text="S(d) = 4^(d+1) − 1"
+                     FontSize="10.5"
+                     Classes="muted" />
+        </Border>
+
+        <Border Classes="hud"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Bottom"
+                Margin="16">
+          <StackPanel Orientation="Horizontal" Spacing="7">
+            <Ellipse Name="HudDot" Width="6" Height="6" Fill="{StaticResource LabCyan}" />
+            <TextBlock Name="HudStatus" Text="построено" FontSize="10.5" Classes="muted" />
+            <TextBlock Text="·" FontSize="10.5" Classes="muted" />
+            <TextBlock Name="HudDepth" Text="глубина 4" FontSize="10.5" Classes="muted" />
+          </StackPanel>
+        </Border>
+      </Panel>
+    </Border>
+
+    <!-- Панель управления -->
+    <ScrollViewer Grid.Column="1"
+                  VerticalScrollBarVisibility="Auto"
+                  HorizontalScrollBarVisibility="Disabled">
+      <StackPanel Spacing="12" Margin="0,0,4,0">
+
+        <Border Classes="card">
+          <StackPanel Spacing="10">
+            <TextBlock Text="ПАРАМЕТРЫ" Classes="section" />
+
+            <Grid ColumnDefinitions="*,Auto">
+              <TextBlock Text="Глубина рекурсии" FontSize="12.5" VerticalAlignment="Center" />
+              <TextBlock Name="DepthValue" Grid.Column="1" Classes="accent" Text="4" />
+            </Grid>
+
+            <Slider Name="DepthSlider"
+                    Minimum="0"
+                    Maximum="6"
+                    Value="4"
+                    TickFrequency="1"
+                    IsSnapToTickEnabled="True" />
+
+            <TextBlock Name="DepthHint"
+                       Classes="hint"
+                       Text="0 — одна буква H. Каждый уровень добавляет четыре поддерева." />
+          </StackPanel>
+        </Border>
+
+        <Border Classes="card">
+          <StackPanel Spacing="10">
+            <TextBlock Text="АНИМАЦИЯ" Classes="section" />
+
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+              <Button Name="PlayButton" Classes="primary" Content="Построить" />
+              <Button Name="ResetButton" Grid.Column="1" Content="Сброс" />
+            </Grid>
+
+            <Grid ColumnDefinitions="*,Auto">
+              <TextBlock Text="Скорость" Classes="label" VerticalAlignment="Center" />
+              <TextBlock Name="SpeedValue" Grid.Column="1" Classes="accent" Text="×1.0" />
+            </Grid>
+
+            <Slider Name="SpeedSlider"
+                    Minimum="0.25"
+                    Maximum="3"
+                    Value="1" />
+
+            <ProgressBar Name="BuildProgress"
+                         Minimum="0"
+                         Maximum="1"
+                         Value="0" />
+
+            <TextBlock Name="ProgressText" Classes="label" Text="0 / 0" />
+          </StackPanel>
+        </Border>
+
+        <Border Classes="card">
+          <StackPanel Spacing="12">
+            <TextBlock Text="СТАТИСТИКА" Classes="section" />
+
+            <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto"
+                  ColumnSpacing="12" RowSpacing="12">
+              <StackPanel>
+                <TextBlock Text="фигур H" Classes="label" />
+                <TextBlock Name="StatHShapes" Classes="value" FontSize="17" />
+              </StackPanel>
+              <StackPanel Grid.Column="1">
+                <TextBlock Text="отрезков" Classes="label" />
+                <TextBlock Name="StatSegments" Classes="value" FontSize="17" />
+              </StackPanel>
+              <StackPanel Grid.Row="1">
+                <TextBlock Text="макс. глубина" Classes="label" />
+                <TextBlock Name="StatMaxDepth" Classes="value" FontSize="17" />
+              </StackPanel>
+              <StackPanel Grid.Row="1" Grid.Column="1">
+                <TextBlock Text="генерация" Classes="label" />
+                <TextBlock Name="StatGenTime" Classes="value" FontSize="17" />
+              </StackPanel>
+            </Grid>
+          </StackPanel>
+        </Border>
+
+        <Border Classes="card">
+          <StackPanel Spacing="8">
+            <TextBlock Text="КАК ЭТО РАБОТАЕТ" Classes="section" />
+            <TextBlock Classes="hint"
+                       Text="Сначала H, затем в каждом из четырёх концов — такая же H, уменьшенная в √2 раз. И так до заданной глубины." />
+            <TextBlock Name="RecursionLine"
+                       Classes="label"
+                       Text="S(d) = 4 · S(d−1),  S(0) = 3"
+                       FontFamily="Cascadia Code, Consolas, monospace" />
+            <Button Name="OpenCodeButton"
+                    Classes="ghost"
+                    HorizontalAlignment="Left"
+                    Content="Открыть HTreeGenerator.cs" />
+          </StackPanel>
+        </Border>
+
+      </StackPanel>
+    </ScrollViewer>
+  </Grid>
+</UserControl>

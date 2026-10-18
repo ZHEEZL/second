@@ -1,0 +1,12 @@
+<Project>
+  <PropertyGroup>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <AvaloniaVersion>11.3.22</AvaloniaVersion>
+    <Version>0.1.0</Version>
+    <Authors>Recursive Lab team</Authors>
+    <NuGetAudit>false</NuGetAudit>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+</Project>

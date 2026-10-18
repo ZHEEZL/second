@@ -1,0 +1,34 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="RecursiveLab.App.App"
+             RequestedThemeVariant="Dark">
+  <Application.Resources>
+    <ResourceDictionary>
+      <Color x:Key="LabBgColor">#0A0F1E</Color>
+      <SolidColorBrush x:Key="LabBg" Color="#0A0F1E" />
+      <SolidColorBrush x:Key="LabSurface" Color="#0D1526" />
+      <SolidColorBrush x:Key="LabCard" Color="#101A2E" />
+      <SolidColorBrush x:Key="LabCardAlt" Color="#14203A" />
+      <SolidColorBrush x:Key="LabBorder" Color="#223152" />
+      <SolidColorBrush x:Key="LabBorderSoft" Color="#1A2740" />
+      <SolidColorBrush x:Key="LabText" Color="#E8EEF9" />
+      <SolidColorBrush x:Key="LabMuted" Color="#8FA3C8" />
+      <SolidColorBrush x:Key="LabAccent" Color="#5B8CFF" />
+      <SolidColorBrush x:Key="LabCyan" Color="#22D3EE" />
+      <SolidColorBrush x:Key="LabViolet" Color="#A78BFA" />
+      <SolidColorBrush x:Key="LabPink" Color="#F472B6" />
+      <SolidColorBrush x:Key="LabSuccess" Color="#34D399" />
+      <SolidColorBrush x:Key="LabWarning" Color="#FBBF24" />
+      <SolidColorBrush x:Key="LabDanger" Color="#F87171" />
+      <LinearGradientBrush x:Key="LabTitleGradient" StartPoint="0%,0%" EndPoint="100%,100%">
+        <GradientStop Color="#67E8F9" Offset="0" />
+        <GradientStop Color="#818CF8" Offset="0.55" />
+        <GradientStop Color="#C084FC" Offset="1" />
+      </LinearGradientBrush>
+    </ResourceDictionary>
+  </Application.Resources>
+  <Application.Styles>
+    <FluentTheme />
+    <StyleInclude Source="avares://RecursiveLab.App/Styles/LabTheme.axaml" />
+  </Application.Styles>
+</Application>

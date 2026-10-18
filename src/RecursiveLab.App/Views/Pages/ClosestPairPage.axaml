@@ -1,0 +1,128 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:RecursiveLab.App.Controls"
+             x:Class="RecursiveLab.App.Views.Pages.ClosestPairPage">
+
+  <Grid ColumnDefinitions="*,336">
+
+    <!-- Полотно с точками -->
+    <Border Grid.Column="0"
+            Classes="card"
+            Padding="12"
+            Margin="0,0,18,0"
+            ClipToBounds="True">
+      <Panel>
+        <controls:PointsCanvas Name="PointsView" />
+
+        <Border Classes="hud"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Margin="14">
+          <StackPanel Spacing="1">
+            <TextBlock Text="POINT CLOUD" Classes="section" />
+            <TextBlock Name="HudCount" Text="120 точек" FontSize="11.5" />
+          </StackPanel>
+        </Border>
+
+        <Border Classes="hud"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Top"
+                Margin="14">
+          <TextBlock Text="O(n log n)" FontSize="10.5" Classes="muted" />
+        </Border>
+
+        <Border Classes="hud"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Bottom"
+                Margin="14">
+          <StackPanel Orientation="Horizontal" Spacing="7">
+            <Ellipse Name="HudDot" Width="6" Height="6" Fill="{StaticResource LabSuccess}" />
+            <TextBlock Name="HudStatus" Text="готово" FontSize="10.5" Classes="muted" />
+          </StackPanel>
+        </Border>
+      </Panel>
+    </Border>
+
+    <!-- Панель управления -->
+    <ScrollViewer Grid.Column="1"
+                  VerticalScrollBarVisibility="Auto"
+                  HorizontalScrollBarVisibility="Disabled">
+      <StackPanel Spacing="12" Margin="0,0,4,0">
+
+        <Border Classes="card">
+          <StackPanel Spacing="10">
+            <TextBlock Text="ДАННЫЕ" Classes="section" />
+
+            <Grid ColumnDefinitions="*,Auto">
+              <TextBlock Text="Точек" FontSize="12.5" VerticalAlignment="Center" />
+              <TextBlock Name="CountValue" Grid.Column="1" Classes="accent" Text="120" />
+            </Grid>
+
+            <Slider Name="CountSlider"
+                    Minimum="10"
+                    Maximum="2000"
+                    Value="120"
+                    TickFrequency="10" />
+
+            <Button Name="GenerateButton" Classes="primary" Content="Сгенерировать точки" />
+            <TextBlock Classes="hint"
+                       Text="Случайные точки равномерно в квадрате. Больше точек — заметнее выигрыш O(n log n)." />
+          </StackPanel>
+        </Border>
+
+        <Border Classes="card">
+          <StackPanel Spacing="10">
+            <TextBlock Text="АЛГОРИТМ" Classes="section" />
+            <Button Name="FindButton" Classes="primary" Content="Найти ближайшую пару" />
+            <Button Name="ReferenceButton" Content="Перебор (эталон)" />
+
+            <Border Background="#0E1A30"
+                    BorderBrush="{StaticResource LabBorderSoft}"
+                    BorderThickness="1"
+                    CornerRadius="10"
+                    Padding="11,9">
+              <TextBlock Name="StatusText"
+                         Text="Алгоритм ещё не подключён"
+                         FontSize="11.5"
+                         TextWrapping="Wrap"
+                         Foreground="{StaticResource LabMuted}" />
+            </Border>
+
+            <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8">
+              <StackPanel>
+                <TextBlock Text="сравнений" Classes="label" />
+                <TextBlock Name="StatComparisons" Text="—" Classes="value" />
+              </StackPanel>
+              <StackPanel Grid.Column="1">
+                <TextBlock Text="вызовов" Classes="label" />
+                <TextBlock Name="StatCalls" Text="—" Classes="value" />
+              </StackPanel>
+              <StackPanel Grid.Column="2">
+                <TextBlock Text="время" Classes="label" />
+                <TextBlock Name="StatTime" Text="—" Classes="value" />
+              </StackPanel>
+            </Grid>
+          </StackPanel>
+        </Border>
+
+        <Border Classes="card">
+          <StackPanel Spacing="9">
+            <TextBlock Text="УЧАСТНИКУ" Classes="section" />
+            <TextBlock Classes="hint"
+                       Text="Разделить по медиане X → решить половины рекурсивно → проверить полосу 2d, отсортировав её по Y." />
+            <TextBlock Classes="label"
+                       Text="src/RecursiveLab.Core/Tasks/ClosestPair/DivideAndConquerClosestPair.cs"
+                       FontFamily="Cascadia Code, Consolas, monospace"
+                       FontSize="10"
+                       TextWrapping="Wrap" />
+            <Button Name="OpenCodeButton"
+                    Classes="ghost"
+                    HorizontalAlignment="Left"
+                    Content="Открыть файл" />
+          </StackPanel>
+        </Border>
+
+      </StackPanel>
+    </ScrollViewer>
+  </Grid>
+</UserControl>

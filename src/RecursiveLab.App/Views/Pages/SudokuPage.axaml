@@ -1,0 +1,119 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:RecursiveLab.App.Controls"
+             x:Class="RecursiveLab.App.Views.Pages.SudokuPage">
+
+  <Grid ColumnDefinitions="*,336">
+
+    <!-- Доска -->
+    <Border Grid.Column="0"
+            Classes="card"
+            Padding="14"
+            Margin="0,0,18,0"
+            ClipToBounds="True">
+      <Grid RowDefinitions="Auto,*,Auto">
+        <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="4,0,4,8">
+          <StackPanel Orientation="Horizontal" Spacing="10">
+            <TextBlock Text="SUDOKU" Classes="section" VerticalAlignment="Center" />
+            <TextBlock Name="HudFilled"
+                       Text="заполнено 0 / 81"
+                       FontSize="11"
+                       Classes="muted"
+                       VerticalAlignment="Center" />
+          </StackPanel>
+          <TextBlock Grid.Column="1"
+                     Text="9×9 · backtracking"
+                     FontSize="10.5"
+                     Classes="muted"
+                     VerticalAlignment="Center" />
+        </Grid>
+
+        <controls:SudokuBoardView Grid.Row="1" Name="BoardView" />
+
+        <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="7" Margin="4,8,4,0">
+          <Ellipse Name="HudDot" Width="6" Height="6" Fill="{StaticResource LabSuccess}" />
+          <TextBlock Name="HudConflicts" Text="конфликтов нет" FontSize="10.5" Classes="muted" />
+        </StackPanel>
+      </Grid>
+    </Border>
+
+    <!-- Панель управления -->
+    <ScrollViewer Grid.Column="1"
+                  VerticalScrollBarVisibility="Auto"
+                  HorizontalScrollBarVisibility="Disabled">
+      <StackPanel Spacing="12" Margin="0,0,4,0">
+
+        <Border Classes="card">
+          <StackPanel Spacing="10">
+            <TextBlock Text="УСЛОВИЕ" Classes="section" />
+
+            <ComboBox Name="PresetCombo" HorizontalAlignment="Stretch" />
+
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
+              <Button Name="ResetButton" Content="Сброс" />
+              <Button Name="CheckButton" Grid.Column="1" Content="Проверить" />
+            </Grid>
+
+            <TextBlock Classes="hint"
+                       Text="Кликните по клетке и введите 1–9. Backspace — стереть. Заданные клетки не меняются." />
+          </StackPanel>
+        </Border>
+
+        <Border Classes="card">
+          <StackPanel Spacing="10">
+            <TextBlock Text="АЛГОРИТМ" Classes="section" />
+            <Button Name="SolveButton" Classes="primary" Content="Решить судоку" />
+
+            <Border Background="#0E1A30"
+                    BorderBrush="{StaticResource LabBorderSoft}"
+                    BorderThickness="1"
+                    CornerRadius="10"
+                    Padding="11,9">
+              <TextBlock Name="StatusText"
+                         Text="Алгоритм ещё не подключён"
+                         FontSize="11.5"
+                         TextWrapping="Wrap"
+                         Foreground="{StaticResource LabMuted}" />
+            </Border>
+
+            <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8">
+              <StackPanel>
+                <TextBlock Text="шагов" Classes="label" />
+                <TextBlock Name="StatSteps" Text="—" Classes="value" />
+              </StackPanel>
+              <StackPanel Grid.Column="1">
+                <TextBlock Text="вызовов" Classes="label" />
+                <TextBlock Name="StatCalls" Text="—" Classes="value" />
+              </StackPanel>
+              <StackPanel Grid.Column="2">
+                <TextBlock Text="время" Classes="label" />
+                <TextBlock Name="StatTime" Text="—" Classes="value" />
+              </StackPanel>
+            </Grid>
+
+            <TextBlock Classes="hint"
+                       Text="UI сам покажет результат, как только BacktrackingSudokuSolver вернёт решённую доску." />
+          </StackPanel>
+        </Border>
+
+        <Border Classes="card">
+          <StackPanel Spacing="9">
+            <TextBlock Text="УЧАСТНИКУ" Classes="section" />
+            <TextBlock Classes="hint"
+                       Text="Рекурсивный перебор: найти пустую клетку → перебрать кандидатов → поставить значение → уйти в рекурсию → при неудаче откатить." />
+            <TextBlock Classes="label"
+                       Text="src/RecursiveLab.Core/Tasks/Sudoku/BacktrackingSudokuSolver.cs"
+                       FontFamily="Cascadia Code, Consolas, monospace"
+                       FontSize="10"
+                       TextWrapping="Wrap" />
+            <Button Name="OpenCodeButton"
+                    Classes="ghost"
+                    HorizontalAlignment="Left"
+                    Content="Открыть файл" />
+          </StackPanel>
+        </Border>
+
+      </StackPanel>
+    </ScrollViewer>
+  </Grid>
+</UserControl>

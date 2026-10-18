@@ -1,0 +1,6 @@
+# Normalize line endings for the team
+* text=auto eol=lf
+
+*.png binary
+*.gif binary
+*.ico binary

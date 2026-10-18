@@ -1,0 +1,140 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:RecursiveLab.App.Controls"
+             x:Class="RecursiveLab.App.Views.Pages.HanoiPage">
+
+  <Grid ColumnDefinitions="*,336">
+
+    <!-- Башни -->
+    <Border Grid.Column="0"
+            Classes="card"
+            Padding="12"
+            Margin="0,0,18,0"
+            ClipToBounds="True">
+      <Panel>
+        <controls:HanoiCanvas Name="TowerCanvas" />
+
+        <Border Classes="hud"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Margin="14">
+          <StackPanel Spacing="1">
+            <TextBlock Text="HANOI" Classes="section" />
+            <TextBlock Name="HudDisks" Text="4 диска" FontSize="11.5" />
+          </StackPanel>
+        </Border>
+
+        <Border Classes="hud"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Top"
+                Margin="14">
+          <TextBlock Text="2ⁿ − 1 ходов" FontSize="10.5" Classes="muted" />
+        </Border>
+
+        <Border Classes="hud"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Margin="14,66,0,0">
+          <StackPanel Orientation="Horizontal" Spacing="7">
+            <Ellipse Name="HudDot" Width="6" Height="6" Fill="{StaticResource LabPink}" />
+            <TextBlock Name="HudStatus" Text="готово" FontSize="10.5" Classes="muted" />
+            <TextBlock Text="·" FontSize="10.5" Classes="muted" />
+            <TextBlock Name="HudMoves" Text="0 ходов" FontSize="10.5" Classes="muted" />
+          </StackPanel>
+        </Border>
+      </Panel>
+    </Border>
+
+    <!-- Панель управления -->
+    <ScrollViewer Grid.Column="1"
+                  VerticalScrollBarVisibility="Auto"
+                  HorizontalScrollBarVisibility="Disabled">
+      <StackPanel Spacing="12" Margin="0,0,4,0">
+
+        <Border Classes="card">
+          <StackPanel Spacing="10">
+            <TextBlock Text="ПАРАМЕТРЫ" Classes="section" />
+
+            <Grid ColumnDefinitions="*,Auto">
+              <TextBlock Text="Колец" FontSize="12.5" VerticalAlignment="Center" />
+              <TextBlock Name="DiskValue" Grid.Column="1" Classes="accent" Text="4" />
+            </Grid>
+
+            <Slider Name="DiskSlider"
+                    Minimum="3"
+                    Maximum="8"
+                    Value="4"
+                    TickFrequency="1"
+                    IsSnapToTickEnabled="True" />
+
+            <TextBlock Classes="hint"
+                       Text="Классическая головоломка: перенести пирамиду на стержень C, перекладывая по одному кольцу и не кладя большее на меньшее." />
+          </StackPanel>
+        </Border>
+
+        <Border Classes="card">
+          <StackPanel Spacing="10">
+            <TextBlock Text="РЕШЕНИЕ" Classes="section" />
+
+            <ComboBox Name="ModeCombo" HorizontalAlignment="Stretch" />
+
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
+              <Button Name="SolveButton" Classes="primary" Content="Решить" />
+              <Button Name="ResetButton" Grid.Column="1" Content="Сброс" />
+            </Grid>
+
+            <Border Background="#0E1A30"
+                    BorderBrush="{StaticResource LabBorderSoft}"
+                    BorderThickness="1"
+                    CornerRadius="10"
+                    Padding="11,9">
+              <TextBlock Name="StatusText"
+                         Text="Алгоритм ещё не подключён"
+                         FontSize="11.5"
+                         TextWrapping="Wrap"
+                         Foreground="{StaticResource LabMuted}" />
+            </Border>
+
+            <TextBlock Name="LastMoveText"
+                       Classes="label"
+                       Text="Ходы появятся после запуска алгоритма."
+                       TextWrapping="Wrap" />
+
+            <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8">
+              <StackPanel>
+                <TextBlock Text="всего ходов" Classes="label" />
+                <TextBlock Name="StatExpected" Text="15" Classes="value" />
+              </StackPanel>
+              <StackPanel Grid.Column="1">
+                <TextBlock Text="сделано" Classes="label" />
+                <TextBlock Name="StatDone" Text="0" Classes="value" />
+              </StackPanel>
+              <StackPanel Grid.Column="2">
+                <TextBlock Text="время" Classes="label" />
+                <TextBlock Name="StatTime" Text="—" Classes="value" />
+              </StackPanel>
+            </Grid>
+          </StackPanel>
+        </Border>
+
+        <Border Classes="card">
+          <StackPanel Spacing="9">
+            <TextBlock Text="УЧАСТНИКУ" Classes="section" />
+            <TextBlock Classes="hint"
+                       Text="Задание 2: рекурсивное решение. Доп. задание: тот же алгоритм через явный стек — выберите режим в списке выше." />
+            <TextBlock Classes="label"
+                       Text="RecursiveHanoiSolver.cs · StackHanoiSolver.cs"
+                       FontFamily="Cascadia Code, Consolas, monospace"
+                       FontSize="10"
+                       TextWrapping="Wrap" />
+            <Button Name="OpenCodeButton"
+                    Classes="ghost"
+                    HorizontalAlignment="Left"
+                    Content="Открыть файл" />
+          </StackPanel>
+        </Border>
+
+      </StackPanel>
+    </ScrollViewer>
+  </Grid>
+</UserControl>

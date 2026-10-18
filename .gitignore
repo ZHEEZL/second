@@ -1,0 +1,20 @@
+# Build output
+bin/
+obj/
+artifacts/
+publish/
+
+# Local tooling caches (created by scripts/dotnet.ps1)
+.dotnet/
+.nuget/
+.tools/
+
+# IDE
+.vs/
+.idea/
+*.user
+*.suo
+
+# OS
+Thumbs.db
+.DS_Store

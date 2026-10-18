@@ -1,0 +1,109 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="RecursiveLab.App.Views.MainWindow"
+        Title="Recursive Lab — лаборатория рекурсии"
+        Width="1280"
+        Height="860"
+        MinWidth="1080"
+        MinHeight="720"
+        WindowStartupLocation="CenterScreen">
+  <Window.Background>
+    <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+      <GradientStop Color="#0A0F1E" Offset="0" />
+      <GradientStop Color="#0C1426" Offset="0.55" />
+      <GradientStop Color="#090E1B" Offset="1" />
+    </LinearGradientBrush>
+  </Window.Background>
+
+  <Grid ColumnDefinitions="272,*">
+
+    <!-- Левая навигация -->
+    <Border Grid.Column="0"
+            Background="#0B1322"
+            BorderBrush="#16223A"
+            BorderThickness="0,0,1,0">
+      <Grid RowDefinitions="Auto,*,Auto" Margin="18,22,18,18">
+        <StackPanel Grid.Row="0" Spacing="14">
+          <StackPanel Orientation="Horizontal" Spacing="11">
+            <Border Width="40" Height="40" CornerRadius="12" Background="{StaticResource LabTitleGradient}">
+              <TextBlock Text="RL"
+                         FontSize="14"
+                         FontWeight="Black"
+                         Foreground="#06101F"
+                         HorizontalAlignment="Center"
+                         VerticalAlignment="Center" />
+            </Border>
+            <StackPanel VerticalAlignment="Center" Spacing="1">
+              <TextBlock Text="Recursive Lab" FontSize="16.5" FontWeight="Bold" />
+              <TextBlock Text="лаборатория рекурсии" FontSize="10" Classes="muted" />
+            </StackPanel>
+          </StackPanel>
+
+          <Border Height="1" Background="#16223A" Margin="0,2,0,0" />
+          <TextBlock Text="ЗАДАЧИ" Classes="section" Margin="4,0,0,0" />
+        </StackPanel>
+
+        <ScrollViewer Grid.Row="1"
+                      VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Disabled"
+                      Margin="0,4,0,0">
+          <StackPanel Name="TaskButtons" Spacing="4" />
+        </ScrollViewer>
+
+        <StackPanel Grid.Row="2" Spacing="5">
+          <Border Height="1" Background="#16223A" Margin="0,0,0,8" />
+          <TextBlock Text="C# · Avalonia 11 · .NET 8" FontSize="10" Classes="muted" />
+          <TextBlock Text="У каждого участника — свой алгоритм и своя папка."
+                     FontSize="10"
+                     Classes="hint" />
+        </StackPanel>
+      </Grid>
+    </Border>
+
+    <!-- Контент -->
+    <Grid Grid.Column="1" RowDefinitions="Auto,*,Auto">
+      <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="30,24,30,0">
+        <StackPanel VerticalAlignment="Center" Spacing="4">
+          <TextBlock Name="TaskTitle" FontSize="27" FontWeight="Bold" />
+          <TextBlock Name="TaskSubtitle" Classes="muted" FontSize="12" />
+        </StackPanel>
+
+        <StackPanel Grid.Column="1"
+                    Orientation="Horizontal"
+                    Spacing="8"
+                    VerticalAlignment="Center"
+                    Margin="20,0,0,0">
+          <Border Classes="chip">
+            <TextBlock Name="TaskAuthor" FontSize="11" Foreground="{StaticResource LabMuted}" />
+          </Border>
+          <Border Classes="chip">
+            <TextBlock Name="TaskComplexity" FontSize="11" Foreground="{StaticResource LabMuted}" />
+          </Border>
+          <Border Name="StatusChip" Classes="chip">
+            <StackPanel Orientation="Horizontal" Spacing="6">
+              <Ellipse Name="StatusDot" Width="6" Height="6" />
+              <TextBlock Name="TaskStatus" FontSize="11" FontWeight="SemiBold" />
+            </StackPanel>
+          </Border>
+        </StackPanel>
+      </Grid>
+
+      <ContentControl Grid.Row="1"
+                      Name="PageHost"
+                      Margin="30,20,30,14"
+                      HorizontalContentAlignment="Stretch"
+                      VerticalContentAlignment="Stretch" />
+
+      <Grid Grid.Row="2" ColumnDefinitions="*,Auto" Margin="30,0,30,14">
+        <TextBlock Name="FooterHint"
+                   FontSize="10"
+                   Classes="muted"
+                   Text="Выберите задачу слева · параметры и анимация — на панели управления" />
+        <TextBlock Grid.Column="1"
+                   FontSize="10"
+                   Classes="muted"
+                   Text="Лабораторная «Рекурсивные алгоритмы»" />
+      </Grid>
+    </Grid>
+  </Grid>
+</Window>
