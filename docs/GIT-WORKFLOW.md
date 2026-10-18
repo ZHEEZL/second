@@ -29,6 +29,13 @@ git config --global user.email "you@example.com"
 
 Имя и почта попадут в коммиты — преподаватель увидит авторство.
 
+> **Важно:** чтобы GitHub показывал вас в **Contributors**, email из коммита
+> должен быть привязан к GitHub-аккаунту. Проверить можно так:
+> `git log -1 --format='%an <%ae>'`. Если GitHub показывает 0 контрибьюторов,
+> добавьте этот email в **GitHub → Settings → Emails** (и подтвердите) или
+> используйте noreply-адрес вида
+> `12345678+username@users.noreply.github.com` (цифры — ваш GitHub ID).
+
 ## 2. Клонировать репозиторий
 
 ```powershell
