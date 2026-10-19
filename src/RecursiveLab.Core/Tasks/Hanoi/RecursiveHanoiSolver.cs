@@ -1,20 +1,12 @@
 namespace RecursiveLab.Core.Tasks.Hanoi;
 
 /// <summary>
-/// ЗАГЛУШКА для участника команды, отвечающего за «Ханойские башни».
+/// Рекурсивное решение «Ханойских башен» (задание 2 лабораторной).
 ///
-/// Задание 2 лабораторной: рекурсивное решение.
-/// Доп. задание: то же самое через собственный стек (StackHanoiSolver).
-///
-/// Что нужно сделать:
-///   1. Реализовать функцию Move(n, from, to):
-///      — если n == 1, перенести диск 1;
-///      — иначе перенести n-1 на вспомогательный стержень,
-///        перенести диск n, вернуть n-1 на целевой.
-///   2. Добавлять каждый ход в результат и вызывать onMove.
-///   3. Количество ходов должно быть 2^n - 1.
-///
-/// Не изменяйте сигнатуру Solve — на неё рассчитан UI.
+/// Move(n, from, to, aux):
+///   Move(n − 1, from, aux, to)   // убрать n−1 верхних колец на вспомогательный стержень
+///   перенести диск n: from → to
+///   Move(n − 1, aux, to, from)   // вернуть n−1 колец на целевой стержень
 /// </summary>
 public sealed class RecursiveHanoiSolver : IHanoiSolver
 {
@@ -27,9 +19,30 @@ public sealed class RecursiveHanoiSolver : IHanoiSolver
             throw new ArgumentOutOfRangeException(nameof(diskCount));
         }
 
-        // TODO(ханой): реализовать рекурсивное решение.
-        throw new NotImplementedException(
-            "Рекурсивное решение Ханойских башен ещё не реализовано. " +
-            "Откройте src/RecursiveLab.Core/Tasks/Hanoi/RecursiveHanoiSolver.cs и заполните TODO.");
+        var moves = new List<HanoiMove>((1 << diskCount) - 1);
+        Move(diskCount, from: 0, to: 2, aux: 1, moves, onMove);
+        return moves;
+    }
+
+    private static void Move(
+        int diskCount,
+        int from,
+        int to,
+        int aux,
+        List<HanoiMove> moves,
+        Action<HanoiMove>? onMove)
+    {
+        if (diskCount == 0)
+        {
+            return;
+        }
+
+        Move(diskCount - 1, from, aux, to, moves, onMove);
+
+        var move = new HanoiMove(diskCount, from, to);
+        moves.Add(move);
+        onMove?.Invoke(move);
+
+        Move(diskCount - 1, aux, to, from, moves, onMove);
     }
 }

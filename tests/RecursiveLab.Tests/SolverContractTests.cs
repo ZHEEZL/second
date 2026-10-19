@@ -5,8 +5,8 @@ namespace RecursiveLab.Tests;
 
 /// <summary>
 /// Контрактные тесты для задач, которые реализуют участники команды.
-/// Пока алгоритмы — заглушки, тесты пропущены (Skip). После реализации
-/// достаточно убрать Skip и запустить dotnet test.
+/// Ханойские башни реализованы и проверяются; судоку пока заглушка,
+/// поэтому его тест пропущен (Skip).
 /// </summary>
 public class SolverContractTests
 {
@@ -24,7 +24,7 @@ public class SolverContractTests
         Assert.False(board.IsSolved(), "Исходная доска не должна меняться.");
     }
 
-    [Fact(Skip = "Реализует участник 4: снять Skip после готовности RecursiveHanoiSolver")]
+    [Fact]
     public void RecursiveHanoi_ReturnsTwoToThePowerOfNMoves()
     {
         var solver = new RecursiveHanoiSolver();
@@ -39,7 +39,7 @@ public class SolverContractTests
         }
     }
 
-    [Fact(Skip = "Реализует участник 4 (доп.): снять Skip после готовности StackHanoiSolver")]
+    [Fact]
     public void StackHanoi_MatchesRecursiveHanoi()
     {
         var stackSolver = new StackHanoiSolver();
@@ -53,5 +53,69 @@ public class SolverContractTests
             Assert.Equal(expected.Count, actual.Count);
             Assert.Equal(expected, actual);
         }
+    }
+
+    [Theory]
+    [InlineData(1)]
+    [InlineData(2)]
+    [InlineData(3)]
+    [InlineData(4)]
+    [InlineData(8)]
+    public void HanoiSolvers_ProduceLegalMoves(int diskCount)
+    {
+        AssertLegalSolution(new RecursiveHanoiSolver(), diskCount);
+        AssertLegalSolution(new StackHanoiSolver(), diskCount);
+    }
+
+    /// <summary>Проигрывает ходы и проверяет правила: верхнее кольцо, не большее на меньшее.</summary>
+    private static void AssertLegalSolution(IHanoiSolver solver, int diskCount)
+    {
+        var rods = new List<int>[3];
+
+        for (var rod = 0; rod < rods.Length; rod++)
+        {
+            rods[rod] = new List<int>();
+        }
+
+        // Снизу вверх: diskCount, diskCount-1, ..., 1 (верхнее кольцо — последний элемент).
+        for (var disk = diskCount; disk >= 1; disk--)
+        {
+            rods[0].Add(disk);
+        }
+
+        var moves = solver.Solve(diskCount);
+        Assert.Equal((1 << diskCount) - 1, moves.Count);
+
+        foreach (var move in moves)
+        {
+            Assert.InRange(move.From, 0, 2);
+            Assert.InRange(move.To, 0, 2);
+            Assert.NotEqual(move.From, move.To);
+
+            var source = rods[move.From];
+            Assert.NotEmpty(source);
+            Assert.Equal(move.Disk, source[^1]);
+
+            var target = rods[move.To];
+            if (target.Count > 0)
+            {
+                Assert.True(target[^1] > move.Disk, "нельзя класть большее кольцо на меньшее");
+            }
+
+            source.RemoveAt(source.Count - 1);
+            target.Add(move.Disk);
+
+            foreach (var rod in rods)
+            {
+                for (var index = 1; index < rod.Count; index++)
+                {
+                    Assert.True(rod[index - 1] > rod[index], "кольца должны уменьшаться снизу вверх");
+                }
+            }
+        }
+
+        Assert.Empty(rods[0]);
+        Assert.Empty(rods[1]);
+        Assert.Equal(Enumerable.Range(1, diskCount).Reverse(), rods[2]);
     }
 }

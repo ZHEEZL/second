@@ -1,19 +1,29 @@
 # Задача: Ханойские башни (задание 2 лабораторной)
 
-**Статус:** UI готов, алгоритмы — заглушки. **Автор:** участник 4.
+**Статус:** готово (рекурсия и стек). **Автор:** участник 4.
 **Ветка:** `feature/hanoi`.
 
-> Это **обязательное задание 2** из PDF. Если в команде пока нет человека на
-> него — его нужно распределить. UI и контракты уже готовы, остаётся только
-> алгоритм (плюс, по желанию, вариант со стеком).
+> Это **обязательное задание 2** из PDF. Реализованы оба варианта:
+> рекурсивный и итеративный через явный стек (доп. задание).
 
 ## Файлы
 
-- Рекурсивная заглушка: `src/RecursiveLab.Core/Tasks/Hanoi/RecursiveHanoiSolver.cs`
-- Заглушка со стеком: `src/RecursiveLab.Core/Tasks/Hanoi/StackHanoiSolver.cs`
+- Реализация рекурсии: `src/RecursiveLab.Core/Tasks/Hanoi/RecursiveHanoiSolver.cs`
+- Реализация через стек: `src/RecursiveLab.Core/Tasks/Hanoi/StackHanoiSolver.cs`
 - Контракт: `src/RecursiveLab.Core/Tasks/Hanoi/HanoiModels.cs`
 - Страница: `src/RecursiveLab.App/Views/Pages/HanoiPage.axaml(.cs)`
-- Тесты: `tests/RecursiveLab.Tests/SolverContractTests.cs` (снять `Skip`)
+- Тесты: `tests/RecursiveLab.Tests/SolverContractTests.cs` (включены)
+
+## Как реализовано
+
+- `RecursiveHanoiSolver` — классическая рекурсия `Move(n, from, to, aux)`:
+  `n−1` колец на вспомогательный стержень, перенос диска `n`, возврат `n−1`
+  колец на целевой. Каждый ход добавляется в список и передаётся в `onMove`.
+- `StackHanoiSolver` — тот же порядок без рекурсии: в стеке лежат кадры
+  `(n, from, to, aux, stage)`, `stage` соответствует трём шагам рекурсии.
+- Оба солвера возвращают ровно `2^n − 1` ходов и не меняют входные данные.
+- Тесты проверяют количество ходов, совпадение обеих реализаций и
+  валидность каждого хода (верхнее кольцо, нельзя большее на меньшее).
 
 ## Контракт
 
@@ -58,10 +68,11 @@ Move(n, from, to, aux):
 
 ## Приёмка
 
-- [ ] `RecursiveHanoi_ReturnsTwoToThePowerOfNMoves` без `Skip` зелёный.
-- [ ] `StackHanoi_MatchesRecursiveHanoi` без `Skip` зелёный (доп. задание).
-- [ ] В UI анимация доходит до конца, кольца не «прыгают» и не нарушают правила.
-- [ ] Число ходов в статистике совпадает с `2^n − 1`.
+- [x] `RecursiveHanoi_ReturnsTwoToThePowerOfNMoves` без `Skip` зелёный.
+- [x] `StackHanoi_MatchesRecursiveHanoi` без `Skip` зелёный (доп. задание).
+- [x] `HanoiSolvers_ProduceLegalMoves` — каждый ход проверен по правилам.
+- [x] В UI анимация проигрывает возвращённые ходы, кольца не нарушают правила.
+- [x] Число ходов в статистике совпадает с `2^n − 1`.
 - [ ] Ветка без предупреждений, PR просмотрен.
 
 ## Подсказки

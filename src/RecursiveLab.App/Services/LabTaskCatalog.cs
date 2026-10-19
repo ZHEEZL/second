@@ -63,7 +63,7 @@ public static class LabTaskCatalog
             "Рекурсия и явный стек",
             "участник 4",
             "O(2^n)",
-            LabTaskStatus.InProgress,
+            LabTaskStatus.Ready,
             "#F472B6",
             () => new Views.Pages.HanoiPage()),
     ];

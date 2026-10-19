@@ -16,7 +16,7 @@
 | H-дерево (фрактал) | участник 1 | готово | `src/RecursiveLab.Core/Tasks/HTree/HTreeGenerator.cs` |
 | Судоку | участник 2 | UI готов, алгоритм — TODO | `src/RecursiveLab.Core/Tasks/Sudoku/BacktrackingSudokuSolver.cs` |
 | Ближайшая пара точек | участник 3 | UI готов, алгоритм — TODO | `src/RecursiveLab.Core/Tasks/ClosestPair/DivideAndConquerClosestPair.cs` |
-| Ханойские башни | участник 4 | UI готов, алгоритм — TODO | `src/RecursiveLab.Core/Tasks/Hanoi/RecursiveHanoiSolver.cs` |
+| Ханойские башни | участник 4 | готово | `src/RecursiveLab.Core/Tasks/Hanoi/RecursiveHanoiSolver.cs`, `StackHanoiSolver.cs` |
 
 > Имена авторов, статусы и порядок задач меняются в одном месте:
 > `src/RecursiveLab.App/Services/LabTaskCatalog.cs`.
@@ -91,7 +91,7 @@ RecursiveLab.sln
 │   │       ├── HTree/            # H-дерево (готово)
 │   │       ├── Sudoku/           # доска, контракт, заглушка (TODO)
 │   │       ├── ClosestPair/      # контракт, перебор-эталон, заглушка (TODO)
-│   │       └── Hanoi/            # рекурсия и стек, заглушки (TODO)
+│   │       └── Hanoi/            # рекурсия и стек (готово)
 │   ├── RecursiveLab.App/         # Avalonia: окно, навигация, тема, страницы
 │   └── RecursiveLab.Smoke/       # headless-скриншоты для проверки вёрстки
 ├── tests/RecursiveLab.Tests/     # xUnit-тесты + контрактные тесты для участников
