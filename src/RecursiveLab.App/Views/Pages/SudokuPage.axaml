@@ -22,7 +22,7 @@
                        VerticalAlignment="Center" />
           </StackPanel>
           <TextBlock Grid.Column="1"
-                     Text="9×9 · backtracking"
+                     Text="9×9 · O(9^m) с эвристикой MRV"
                      FontSize="10.5"
                      Classes="muted"
                      VerticalAlignment="Center" />
@@ -98,9 +98,10 @@
 
         <Border Classes="card">
           <StackPanel Spacing="9">
-            <TextBlock Text="УЧАСТНИКУ" Classes="section" />
+            <TextBlock Text="КАК ЭТО РАБОТАЕТ" Classes="section" />
             <TextBlock Classes="hint"
-                       Text="Рекурсивный перебор: найти пустую клетку → перебрать кандидатов → поставить значение → уйти в рекурсию → при неудаче откатить." />
+                       Text="Алгоритм использует рекурсивный перебор с возвратом (backtracking). Благодаря внедренной эвристике MRV (Minimum Remaining Values), на каждом шаге алгоритм выбирает пустую клетку с наименьшим числом возможных кандидатов. Это позволяет отсекать тупиковые ветви на самых ранних этапах и решать даже самые сложные судоку за миллисекунды."
+                       TextWrapping="Wrap" />
             <TextBlock Classes="label"
                        Text="src/RecursiveLab.Core/Tasks/Sudoku/BacktrackingSudokuSolver.cs"
                        FontFamily="Cascadia Code, Consolas, monospace"
@@ -109,7 +110,7 @@
             <Button Name="OpenCodeButton"
                     Classes="ghost"
                     HorizontalAlignment="Left"
-                    Content="Открыть файл" />
+                    Content="Открыть код решателя" />
           </StackPanel>
         </Border>
 

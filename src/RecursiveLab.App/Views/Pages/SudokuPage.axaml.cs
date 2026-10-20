@@ -1,9 +1,13 @@
+using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Controls.Shapes;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
+using Avalonia.Threading;
 using RecursiveLab.App.Controls;
 using RecursiveLab.App.Services;
 using RecursiveLab.Core.Tasks.Sudoku;
@@ -27,6 +31,12 @@ public partial class SudokuPage : UserControl
     private readonly TextBlock _statCalls;
     private readonly TextBlock _statTime;
 
+    // Поля для анимации
+    private readonly DispatcherTimer _timer;
+    private IReadOnlyList<SudokuStep> _steps = Array.Empty<SudokuStep>();
+    private int _stepIndex;
+    private bool _isPlaying;
+
     private SudokuBoard _board = new();
     private bool _initialized;
 
@@ -37,7 +47,8 @@ public partial class SudokuPage : UserControl
         _boardView = Get<SudokuBoardView>("BoardView");
         _presetCombo = Get<ComboBox>("PresetCombo");
         _statusText = Get<TextBlock>("StatusText");
-        _hudFilled = Get<TextBlock>("HudFilled");        _hudConflicts = Get<TextBlock>("HudConflicts");
+        _hudFilled = Get<TextBlock>("HudFilled");
+        _hudConflicts = Get<TextBlock>("HudConflicts");
         _hudDot = this.FindControl<Ellipse>("HudDot");
         _statSteps = Get<TextBlock>("StatSteps");
         _statCalls = Get<TextBlock>("StatCalls");
@@ -64,6 +75,10 @@ public partial class SudokuPage : UserControl
         Get<Button>("OpenCodeButton").Click += (_, _) =>
             RepoPaths.ShowInExplorer("src/RecursiveLab.Core/Tasks/Sudoku/BacktrackingSudokuSolver.cs");
 
+        // Инициализируем таймер для анимации (обновление каждые 16 мс = ~60 FPS)
+        _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(16) };
+        _timer.Tick += (_, _) => OnAnimationTick();
+
         _initialized = true;
         LoadPreset(0);
     }
@@ -72,6 +87,8 @@ public partial class SudokuPage : UserControl
 
     private void LoadPreset(int index)
     {
+        StopAnimation();
+
         if (index < 0 || index >= SudokuPresets.All.Count)
         {
             index = 0;
@@ -104,6 +121,8 @@ public partial class SudokuPage : UserControl
 
     private void CheckCurrentBoard()
     {
+        StopAnimation();
+
         var conflicts = _board.FindConflicts();
         _boardView.Conflicts = conflicts;
 
@@ -125,12 +144,22 @@ public partial class SudokuPage : UserControl
 
     private void OnSolveClicked(object? sender, RoutedEventArgs e)
     {
-        SetStatus("Решаем…", MutedBrush);
+        if (_isPlaying)
+        {
+            StopAnimation();
+            SetStatus("Анимация остановлена", WarningBrush);
+            return;
+        }
+
+        SetStatus("Ищем решение…", MutedBrush);
 
         try
         {
             var solver = new BacktrackingSudokuSolver();
-            var result = solver.Solve(_board.Clone());
+            var stepsList = new List<SudokuStep>();
+
+            // Собираем шаги из твоего алгоритма
+            var result = solver.Solve(_board.Clone(), step => stepsList.Add(step));
 
             if (!result.Solved || result.Board is null)
             {
@@ -138,18 +167,18 @@ public partial class SudokuPage : UserControl
                 return;
             }
 
-            _board.CopyFrom(result.Board);
-            _boardView.Board = _board;
-            _boardView.Conflicts = _board.FindConflicts();
-            UpdateHud();
+            // Настраиваем плеер анимации
+            _steps = stepsList;
+            _stepIndex = 0;
+            _isPlaying = true;
+            Get<Button>("SolveButton").Content = "Остановить";
 
             _statSteps.Text = result.Steps.ToString("N0", CultureInfo.CurrentCulture);
             _statCalls.Text = result.RecursiveCalls.ToString("N0", CultureInfo.CurrentCulture);
             _statTime.Text = $"{result.Elapsed.TotalMilliseconds:0.0} мс";
 
-            SetStatus(
-                $"Решено за {result.Elapsed.TotalMilliseconds:0.0} мс · {result.Steps:N0} шагов",
-                SuccessBrush);
+            SetStatus($"Решено за {result.Elapsed.TotalMilliseconds:0.0} мс. Воспроизводим {_steps.Count:N0} шагов...", SuccessBrush);
+            _timer.Start();
         }
         catch (NotImplementedException)
         {
@@ -162,6 +191,60 @@ public partial class SudokuPage : UserControl
         {
             ResetStats();
             SetStatus($"Ошибка: {exception.Message}", DangerBrush);
+        }
+    }
+
+    private void OnAnimationTick()
+    {
+        if (!_isPlaying) return;
+
+        // Чтобы визуализация не шла вечно на сложных судоку, ускоряем воспроизведение пропорционально числу ходов
+        int stepsPerTick = Math.Max(1, _steps.Count / 120);
+        int lastCellIndex = -1;
+
+        for (int i = 0; i < stepsPerTick; i++)
+        {
+            if (_stepIndex >= _steps.Count)
+            {
+                StopAnimation();
+                SetStatus("Судоку решено ✓", SuccessBrush);
+                UpdateHud();
+                return;
+            }
+
+            var step = _steps[_stepIndex++];
+            lastCellIndex = step.CellIndex;
+
+            if (step.Kind == SudokuStepKind.Place)
+            {
+                _board.TrySet(step.CellIndex, step.Value);
+            }
+            else if (step.Kind == SudokuStepKind.Remove)
+            {
+                _board.TryClear(step.CellIndex);
+            }
+        }
+
+        // Обновляем визуальное состояние доски
+        _boardView.Board = _board;
+
+        // Присвоение Board сбрасывает SelectedIndex в -1, поэтому возвращаем фокус на последнюю изменённую клетку
+        if (lastCellIndex >= 0)
+        {
+            _boardView.SelectedIndex = lastCellIndex;
+        }
+
+        UpdateHud();
+    }
+
+    private void StopAnimation()
+    {
+        _timer?.Stop();
+        _isPlaying = false;
+        _boardView.SelectedIndex = -1;
+        if (this.FindControl<Button>("SolveButton") is { } btn)
+        {
+            btn.Content = "Решить судоку";
         }
     }
 
