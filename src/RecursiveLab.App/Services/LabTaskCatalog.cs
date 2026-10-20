@@ -42,8 +42,8 @@ public static class LabTaskCatalog
             "Судоку",
             "Перебор с возвратом",
             "участник 2",
-            "backtracking",
-            LabTaskStatus.InProgress,
+            "O(9^m)",
+            LabTaskStatus.Ready,
             "#A78BFA",
             () => new Views.Pages.SudokuPage()),
 
