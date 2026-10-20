@@ -10,7 +10,7 @@ namespace RecursiveLab.Tests;
 /// </summary>
 public class SolverContractTests
 {
-    [Fact(Skip = "Реализует участник 2: снять Skip после готовности BacktrackingSudokuSolver")]
+    [Fact]
     public void SudokuSolver_SolvesClassicPuzzle()
     {
         var board = SudokuBoard.Parse(SudokuPresets.All[0].Board);
