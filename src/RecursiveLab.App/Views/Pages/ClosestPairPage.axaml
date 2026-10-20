@@ -76,6 +76,12 @@
             <Button Name="FindButton" Classes="primary" Content="Найти ближайшую пару" />
             <Button Name="ReferenceButton" Content="Перебор (эталон)" />
 
+            <Grid ColumnDefinitions="*,Auto">
+              <TextBlock Text="Скорость" Classes="label" VerticalAlignment="Center" />
+              <TextBlock Name="SpeedValue" Grid.Column="1" Classes="accent" Text="×1.0" />
+            </Grid>
+            <Slider Name="SpeedSlider" Minimum="0.25" Maximum="3" Value="1" />
+
             <Border Background="#0E1A30"
                     BorderBrush="{StaticResource LabBorderSoft}"
                     BorderThickness="1"

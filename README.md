@@ -1,29 +1,32 @@
-# Recursive Lab — лаборатория рекурсивных алгоритмов
+# Лабораторная работа №2 — Рекурсивные алгоритмы
 
 [![build-and-test](https://github.com/ZHEEZL/second/actions/workflows/ci.yml/badge.svg)](https://github.com/ZHEEZL/second/actions/workflows/ci.yml)
 
-Оконное приложение на C# (Avalonia 11, .NET 8) для лабораторной работы
-«Рекурсивные алгоритмы». Один каркас — четыре задачи. У каждой задачи свой
-участник, своя страница и **свой файл с алгоритмом**: участники не мешают
+Оконное приложение на C# для лабораторной работы №2
+«Рекурсивные алгоритмы». У каждой задачи своя страница и **свой файл с алгоритмом**: участники не мешают
 друг другу и не конфликтуют в git.
 
 ![H-дерево](docs/screenshots/h-tree.png)
 
 ## Задачи
 
-| Задача | Автор | Статус | Файл алгоритма |
-|--------|-------|--------|----------------|
-| H-дерево (фрактал) | участник 1 | готово | `src/RecursiveLab.Core/Tasks/HTree/HTreeGenerator.cs` |
-| Судоку | участник 2 | UI готов, алгоритм — TODO | `src/RecursiveLab.Core/Tasks/Sudoku/BacktrackingSudokuSolver.cs` |
-| Ближайшая пара точек | участник 3 | UI готов, алгоритм — TODO | `src/RecursiveLab.Core/Tasks/ClosestPair/DivideAndConquerClosestPair.cs` |
-| Ханойские башни | участник 4 | готово | `src/RecursiveLab.Core/Tasks/Hanoi/RecursiveHanoiSolver.cs`, `StackHanoiSolver.cs` |
+| Задача | Автор      | Статус | Файл алгоритма |
+|--------|------------|--------|----------------|
+| H-дерево (фрактал) | команда    | готово | `src/RecursiveLab.Core/Tasks/HTree/HTreeGenerator.cs` |
+| Судоку | участник 2 | готово | `src/RecursiveLab.Core/Tasks/Sudoku/BacktrackingSudokuSolver.cs` |
+| Ближайшая пара точек | участник 1 | готово | `src/RecursiveLab.Core/Tasks/ClosestPair/DivideAndConquerClosestPair.cs` |
+| Ханойские башни | команда    | готово | `src/RecursiveLab.Core/Tasks/Hanoi/RecursiveHanoiSolver.cs`, `StackHanoiSolver.cs` |
 
-> Имена авторов, статусы и порядок задач меняются в одном месте:
-> `src/RecursiveLab.App/Services/LabTaskCatalog.cs`.
 
-Ханойские башни добавлены, потому что это **обязательное задание 2** из PDF
-лабораторной. Если в команде пока нет человека на эту задачу — см.
-[`docs/TASK-HANOI.md`](docs/TASK-HANOI.md).
+## Соответствие лабораторной (PDF)
+
+| Пункт задания из PDF | Реализация | Статус |
+|----------------------|------------|--------|
+| Задание 1. Отрисовка фрактала с графическим интерфейсом, рекурсивный алгоритм | H-дерево: `HTreeGenerator.cs`, `HTreePage.axaml` | готово |
+| Задание 2. «Ханойские башни» с графическим интерфейсом | `HanoiPage.axaml`, `RecursiveHanoiSolver.cs` | готово |
+| Доп. задание. Ханойские башни через стек | `StackHanoiSolver.cs` | готово |
+| Сверх задания команды: судоку (backtracking) | `BacktrackingSudokuSolver.cs`, `SudokuPage.axaml` | готово |
+| Сверх задания команды: ближайшая пара (divide and conquer) | `DivideAndConquerClosestPair.cs`, `ClosestPairPage.axaml` | готово |
 
 ## Что умеет приложение
 
@@ -31,14 +34,13 @@
   «Построить»), пауза, скорость, счётчики H-фигур/отрезков, время генерации.
   Цвет и толщина линий показывают уровень рекурсии.
 - **Судоку.** Ввод с клавиатуры, подсветка строки/столбца/квадрата, поиск
-  конфликтов, готовые условия. Как только алгоритм реализован — кнопка
+  конфликтов, скорость, готовые условия. Кнопка
   «Решить» заполняет доску, а панель показывает число шагов/вызовов/время.
-- **Ближайшая пара.** Генерация случайных точек (10–2000), кнопка
-  «Перебор (эталон)» для проверки ответа, подсветка найденной пары. Полоса
-  и линия раздела уже умеют рисоваться — их можно использовать для анимации
-  шагов алгоритма.
+- **Ближайшая пара.** Генерация случайных точек (10–2000), анимация шагов
+  (разбиение, полоса, смена лучшей пары) с ползунком скорости, кнопка
+  «Перебор (эталон)» для проверки ответа, подсветка найденной пары.
 - **Ханойские башни.** Выбор числа колец, режим «рекурсия» / «стек»,
-  анимация ходов, счётчики ходов и времени.
+  анимация ходов, скорость, счётчики ходов и времени.
 
 ## Быстрый старт
 
@@ -71,14 +73,6 @@ dotnet test
 dotnet run --project src/RecursiveLab.Smoke -- artifacts/screenshots
 ```
 
-## Git и CI
-
-Репозиторий инициализирован: ветка `main`, первый коммит, `.gitignore`.
-Подключение GitHub, ветки на каждую задачу, PR, защита `main` и разрешение
-конфликтов — в [`docs/GIT-WORKFLOW.md`](docs/GIT-WORKFLOW.md).
-
-CI (`.github/workflows/ci.yml`) на каждый push/PR в `main` собирает Release
-и запускает тесты. Шаблон PR — `.github/pull_request_template.md`.
 
 ## Структура
 
@@ -89,8 +83,8 @@ RecursiveLab.sln
 │   │   ├── Geometry/
 │   │   └── Tasks/
 │   │       ├── HTree/            # H-дерево (готово)
-│   │       ├── Sudoku/           # доска, контракт, заглушка (TODO)
-│   │       ├── ClosestPair/      # контракт, перебор-эталон, заглушка (TODO)
+│   │       ├── Sudoku/           # backtracking с MRV (готово)
+│   │       ├── ClosestPair/      # divide and conquer + эталон (готово)
 │   │       └── Hanoi/            # рекурсия и стек (готово)
 │   ├── RecursiveLab.App/         # Avalonia: окно, навигация, тема, страницы
 │   └── RecursiveLab.Smoke/       # headless-скриншоты для проверки вёрстки
@@ -98,19 +92,6 @@ RecursiveLab.sln
 ├── docs/                         # планы, задания участникам, скриншоты
 └── scripts/dotnet.ps1            # dotnet с локальными кэшами (для песочниц)
 ```
-
-## Как участник подключает свой алгоритм
-
-1. Найти свою страницу в приложении — там указан файл с `TODO`.
-2. Реализовать метод по контракту из `RecursiveLab.Core`. UI уже написан:
-   ему достаточно, чтобы метод вернул результат в ожидаемом формате.
-3. Снять `Skip` с контрактного теста в `tests/RecursiveLab.Tests/SolverContractTests.cs`
-   (или `ClosestPairReferenceTests.cs`) и убедиться, что `dotnet test` зелёный.
-4. Проверить сценарий вручную по чек-листу из `docs/TASK-*.md`.
-5. Закоммитить в свою ветку и открыть PR.
-
-Подробный план работы команды, git-флоу и сценарий защиты:
-[`docs/TEAM-PLAN.md`](docs/TEAM-PLAN.md).
 
 ## Скриншоты
 
@@ -121,14 +102,3 @@ RecursiveLab.sln
 | Ближайшая пара | Ханойские башни |
 |----------------|-----------------|
 | ![](docs/screenshots/closest-pair.png) | ![](docs/screenshots/hanoi.png) |
-
-## Документация
-
-- [`docs/TEAM-PLAN.md`](docs/TEAM-PLAN.md) — роли, архитектура, git-флоу, защита.
-- [`docs/GIT-WORKFLOW.md`](docs/GIT-WORKFLOW.md) — подключение GitHub, ветки, PR, CI, защита `main`.
-- [`docs/DEV-SETUP.md`](docs/DEV-SETUP.md) — окружение, сборка, тесты, типовые проблемы.
-- [`docs/TASK-H-TREE.md`](docs/TASK-H-TREE.md) — что уже сделано и как это объяснять.
-- [`docs/TASK-SUDOKU.md`](docs/TASK-SUDOKU.md) — задание участнику 2.
-- [`docs/TASK-CLOSEST-PAIR.md`](docs/TASK-CLOSEST-PAIR.md) — задание участнику 3.
-- [`docs/TASK-HANOI.md`](docs/TASK-HANOI.md) — задание участнику 4 (рекурсия + стек).
-- [`docs/IDEAS.md`](docs/IDEAS.md) — идеи, что добавить после сдачи.

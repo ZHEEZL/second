@@ -1,7 +1,7 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         x:Class="RecursiveLab.App.Views.MainWindow"
-        Title="Recursive Lab — лаборатория рекурсии"
+        Title="Вторая лаба"
         Width="1280"
         Height="860"
         MinWidth="1080"
@@ -26,7 +26,7 @@
         <StackPanel Grid.Row="0" Spacing="14">
           <StackPanel Orientation="Horizontal" Spacing="11">
             <Border Width="40" Height="40" CornerRadius="12" Background="{StaticResource LabTitleGradient}">
-              <TextBlock Text="RL"
+              <TextBlock Text="Л2"
                          FontSize="14"
                          FontWeight="Black"
                          Foreground="#06101F"
@@ -34,8 +34,7 @@
                          VerticalAlignment="Center" />
             </Border>
             <StackPanel VerticalAlignment="Center" Spacing="1">
-              <TextBlock Text="Recursive Lab" FontSize="16.5" FontWeight="Bold" />
-              <TextBlock Text="лаборатория рекурсии" FontSize="10" Classes="muted" />
+              <TextBlock Text="Лаба 2" FontSize="16.5" FontWeight="Bold" />
             </StackPanel>
           </StackPanel>
 
@@ -49,14 +48,6 @@
                       Margin="0,4,0,0">
           <StackPanel Name="TaskButtons" Spacing="4" />
         </ScrollViewer>
-
-        <StackPanel Grid.Row="2" Spacing="5">
-          <Border Height="1" Background="#16223A" Margin="0,0,0,8" />
-          <TextBlock Text="C# · Avalonia 11 · .NET 8" FontSize="10" Classes="muted" />
-          <TextBlock Text="У каждого участника — свой алгоритм и своя папка."
-                     FontSize="10"
-                     Classes="hint" />
-        </StackPanel>
       </Grid>
     </Border>
 

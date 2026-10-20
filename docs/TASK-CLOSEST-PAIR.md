@@ -1,15 +1,15 @@
 # Задача: ближайшая пара точек (divide and conquer)
 
-**Статус:** UI готов, алгоритм — заглушка. **Автор:** участник 3.
+**Статус:** готово (алгоритм + анимация шагов). **Автор:** участник 1.
 **Ветка:** `feature/closest-pair`.
 
 ## Файлы
 
-- Заглушка и точка входа: `src/RecursiveLab.Core/Tasks/ClosestPair/DivideAndConquerClosestPair.cs`
+- Алгоритм: `src/RecursiveLab.Core/Tasks/ClosestPair/DivideAndConquerClosestPair.cs`
 - Контракт: `src/RecursiveLab.Core/Tasks/ClosestPair/ClosestPairModels.cs`
 - Эталонный перебор (не сдаваемый): `src/RecursiveLab.Core/Tasks/ClosestPair/ClosestPairReference.cs`
 - Страница: `src/RecursiveLab.App/Views/Pages/ClosestPairPage.axaml(.cs)`
-- Тест: `tests/RecursiveLab.Tests/ClosestPairReferenceTests.cs` (снять `Skip`)
+- Тест: `tests/RecursiveLab.Tests/ClosestPairReferenceTests.cs` (включён)
 
 ## Контракт
 
@@ -29,9 +29,9 @@ public sealed record ClosestPairResult(
 - Точек меньше двух — `ArgumentException`.
 - Возвращается именно **пара точек**, а не только расстояние.
 - `DistanceComparisons` — сколько раз реально сравнивали расстояния.
-- `onStep` — для будущей анимации: `Split` (разбили по X), `BaseCase`,
-  `Strip` (смотрим полосу), `BestChanged`, `Done`. Можно не вызывать, но
-  тогда не будет анимации; UI сейчас подсвечивает только итоговую пару.
+- `onStep` — для анимации: `Split` (разбили по X), `BaseCase`,
+  `Strip` (смотрим полосу), `BestChanged`, `Done`. UI собирает шаги и
+  проигрывает их с выбранной скоростью.
 
 ## Алгоритм
 
@@ -57,11 +57,11 @@ public sealed record ClosestPairResult(
 
 ## Приёмка
 
-- [ ] Тест `DivideAndConquer_MatchesBruteForceOnRandomSets` без `Skip` зелёный.
-- [ ] На 120 точках ответ совпадает с эталоном; на 2000 точках работает
+- [x] Тест `DivideAndConquer_MatchesBruteForceOnRandomSets` без `Skip` зелёный.
+- [x] На 120 точках ответ совпадает с эталоном; на 2000 точках работает
       заметно быстрее перебора (по `DistanceComparisons`).
-- [ ] Кнопка «Найти ближайшую пару» подсвечивает пару и заполняет статистику.
-- [ ] Крайние случаи: 2 точки, совпадающие точки, все точки на одной прямой.
+- [x] Кнопка «Найти ближайшую пару» подсвечивает пару и заполняет статистику.
+- [x] Крайние случаи: 2 точки, совпадающие точки, все точки на одной прямой.
 - [ ] Ветка без предупреждений, PR просмотрен.
 
 ## Подсказки

@@ -55,8 +55,7 @@ public class ClosestPairReferenceTests
         Assert.Throws<ArgumentException>(() => ClosestPairReference.FindBruteForce(new[] { new PointD(1, 1) }));
     }
 
-    // Когда участник 3 реализует DivideAndConquerClosestPair — уберите Skip.
-    [Fact(Skip = "Реализует участник 3: снять Skip после готовности DivideAndConquerClosestPair")]
+    [Fact]
     public void DivideAndConquer_MatchesBruteForceOnRandomSets()
     {
         var random = new Random(12345);
@@ -74,5 +73,45 @@ public class ClosestPairReferenceTests
 
             Assert.Equal(expected.Distance, actual.Distance, 9);
         }
+    }
+
+    [Fact]
+    public void DivideAndConquer_ReportsStepsForAnimation()
+    {
+        var points = new[]
+        {
+            new PointD(0, 0),
+            new PointD(1, 1),
+            new PointD(5, 5),
+            new PointD(6, 6),
+            new PointD(10, 10),
+        };
+
+        var steps = new List<ClosestPairStep>();
+        var finder = new DivideAndConquerClosestPair();
+
+        var result = finder.Find(points, steps.Add);
+
+        Assert.True(result.Distance > 0);
+        Assert.Contains(steps, step => step.Kind == ClosestPairStepKind.Split);
+        Assert.Contains(steps, step => step.Kind == ClosestPairStepKind.BaseCase);
+        Assert.Contains(steps, step => step.Kind == ClosestPairStepKind.Done);
+    }
+
+    [Fact]
+    public void DivideAndConquer_HandlesEdgeCases()
+    {
+        var finder = new DivideAndConquerClosestPair();
+
+        var twoPoints = new[] { new PointD(0, 0), new PointD(3, 4) };
+        Assert.Equal(5, finder.Find(twoPoints).Distance, 9);
+
+        var duplicates = new[] { new PointD(1, 1), new PointD(1, 1), new PointD(5, 5) };
+        Assert.Equal(0, finder.Find(duplicates).Distance, 12);
+
+        var collinear = Enumerable.Range(0, 10)
+            .Select(i => new PointD(i, 0))
+            .ToArray();
+        Assert.Equal(1, finder.Find(collinear).Distance, 12);
     }
 }

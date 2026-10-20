@@ -21,6 +21,8 @@ public partial class HanoiPage : UserControl
 
     private readonly HanoiCanvas _canvas;
     private readonly Slider _diskSlider;
+    private readonly Slider _speedSlider;
+    private readonly TextBlock _speedText;
     private readonly ComboBox _modeCombo;
     private readonly TextBlock _diskValue;
     private readonly TextBlock _hudDisks;
@@ -43,14 +45,18 @@ public partial class HanoiPage : UserControl
     private IReadOnlyList<HanoiMove> _moves = Array.Empty<HanoiMove>();
     private int _moveIndex;
     private int _diskCount = 4;
+    private double _speed = 1;
     private bool _isPlaying;
 
     public HanoiPage()
     {
         InitializeComponent();
 
+
         _canvas = Get<HanoiCanvas>("TowerCanvas");
         _diskSlider = Get<Slider>("DiskSlider");
+        _speedSlider = Get<Slider>("SpeedSlider");
+        _speedText = Get<TextBlock>("SpeedValue");
         _modeCombo = Get<ComboBox>("ModeCombo");
         _diskValue = Get<TextBlock>("DiskValue");
         _hudDisks = Get<TextBlock>("HudDisks");
@@ -76,7 +82,17 @@ public partial class HanoiPage : UserControl
 
             _diskCount = Math.Clamp(disks, 3, 8);
             ResetTower();
+            ApplySpeed();
         };
+
+        _speedSlider.ValueChanged += (_, e) =>
+        {
+            _speed = Math.Clamp(e.NewValue, 0.25, 3);
+            _speedText.Text = $"×{_speed:0.00}";
+            ApplySpeed();
+        };
+
+        _speedText.Text = $"×{_speed:0.00}";
 
         Get<Button>("SolveButton").Click += OnSolveClicked;
         Get<Button>("ResetButton").Click += (_, _) => ResetTower();
@@ -90,11 +106,18 @@ public partial class HanoiPage : UserControl
 
         _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(45) };
         _timer.Tick += (_, _) => OnAnimationTick();
+        ApplySpeed();
 
         ResetTower();
     }
 
     private void InitializeComponent() => AvaloniaXamlLoader.Load(this);
+
+    private void ApplySpeed()
+    {
+        _timer.Interval = TimeSpan.FromMilliseconds(
+            Math.Clamp(45 / _speed, 5, 200));
+    }
 
     private void ResetTower()
     {

@@ -22,6 +22,8 @@ public partial class SudokuPage : UserControl
     private static readonly IBrush DangerBrush = new SolidColorBrush(Color.Parse("#F87171"));
 
     private readonly SudokuBoardView _boardView;
+    private readonly Slider _speedSlider;
+    private readonly TextBlock _speedValue;
     private readonly ComboBox _presetCombo;
     private readonly TextBlock _statusText;
     private readonly TextBlock _hudFilled;
@@ -39,11 +41,17 @@ public partial class SudokuPage : UserControl
 
     private SudokuBoard _board = new();
     private bool _initialized;
+    private double _speed = 1;
 
     public SudokuPage()
     {
         InitializeComponent();
 
+        _speedSlider = Get<Slider>("SpeedSlider");
+        _speedValue = Get<TextBlock>("SpeedValue");
+
+        _speedSlider.ValueChanged += (_, e) => OnSpeedChanged(e.NewValue);
+        _speedValue.Text = $"×{_speed:0.00}";
         _boardView = Get<SudokuBoardView>("BoardView");
         _presetCombo = Get<ComboBox>("PresetCombo");
         _statusText = Get<TextBlock>("StatusText");
@@ -84,6 +92,12 @@ public partial class SudokuPage : UserControl
     }
 
     private void InitializeComponent() => AvaloniaXamlLoader.Load(this);
+
+    private void OnSpeedChanged(double value)
+    {
+        _speed = Math.Clamp(value, 0.25, 3);
+        _speedValue.Text = $"×{_speed:0.00}";
+    }
 
     private void LoadPreset(int index)
     {
@@ -194,12 +208,15 @@ public partial class SudokuPage : UserControl
         }
     }
 
+
     private void OnAnimationTick()
     {
         if (!_isPlaying) return;
 
         // Чтобы визуализация не шла вечно на сложных судоку, ускоряем воспроизведение пропорционально числу ходов
-        int stepsPerTick = Math.Max(1, _steps.Count / 120);
+        int stepsPerTick = Math.Max(
+            1,
+            (int)Math.Round(_steps.Count / 120.0 * _speed));
         int lastCellIndex = -1;
 
         for (int i = 0; i < stepsPerTick; i++)

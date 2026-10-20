@@ -24,15 +24,16 @@ RecursiveLab.App   — окно, тема, страницы, отрисовка 
 
 ## Роли
 
-| Участник | Задача | Ветка | Файл |
-|----------|--------|-------|------|
-| 1 | H-дерево | `feature/htree` | `HTreeGenerator.cs` |
-| 2 | Судоку | `feature/sudoku` | `BacktrackingSudokuSolver.cs` |
-| 3 | Ближайшая пара | `feature/closest-pair` | `DivideAndConquerClosestPair.cs` |
-| 4 | Ханойские башни (+ стек) | `feature/hanoi` | `RecursiveHanoiSolver.cs`, `StackHanoiSolver.cs` |
+| Автор | Задача | Ветка | Файл |
+|-------|--------|-------|------|
+| команда | H-дерево | `feature/htree` | `HTreeGenerator.cs` |
+| участник 2 | Судоку | `feature/sudoku` | `BacktrackingSudokuSolver.cs` |
+| участник 1 | Ближайшая пара | `feature/closest-pair` | `DivideAndConquerClosestPair.cs` |
+| команда | Ханойские башни (+ стек) | `feature/hanoi` | `RecursiveHanoiSolver.cs`, `StackHanoiSolver.cs` |
 
-Перед сдачей замените «участник 1..4» на реальные имена в
-`src/RecursiveLab.App/Services/LabTaskCatalog.cs` и в таблице выше.
+Перед сдачей замените условные подписи («команда», «участник 1/2») на
+реальные имена в `src/RecursiveLab.App/Services/LabTaskCatalog.cs`, README и
+таблице выше.
 
 ## Git-флоу
 

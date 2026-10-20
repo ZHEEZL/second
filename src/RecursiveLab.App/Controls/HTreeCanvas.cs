@@ -31,7 +31,7 @@ public sealed class HTreeCanvas : Control
         ClipToBounds = true;
     }
 
-    public IReadOnlyList<Segment> Segments
+    public IReadOnlyList<Segment>? Segments
     {
         get => _segments;
         set
