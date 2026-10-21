@@ -14,7 +14,7 @@ namespace RecursiveLab.Smoke;
 /// </summary>
 internal static class Program
 {
-    private static readonly string[] TaskIds = ["htree", "sudoku", "closest", "hanoi"];
+    private static readonly string[] TaskIds = ["htree", "sudoku", "closest", "hanoi", "charts"];
 
     public static int Main(string[] args)
     {

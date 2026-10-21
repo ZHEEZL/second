@@ -66,6 +66,16 @@ public static class LabTaskCatalog
             LabTaskStatus.Ready,
             "#F472B6",
             () => new Views.Pages.HanoiPage()),
+
+        new(
+            "charts",
+            "Замеры",
+            "Графики: эксперимент и модель",
+            "команда",
+            "все алгоритмы",
+            LabTaskStatus.Ready,
+            "#34D399",
+            () => new Views.Pages.ChartsPage()),
     ];
 
     public static string StatusText(LabTaskStatus status) => status switch

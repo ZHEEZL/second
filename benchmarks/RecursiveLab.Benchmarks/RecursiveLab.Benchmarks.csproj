@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>RecursiveLab.Benchmarks</RootNamespace>
+    <TieredCompilation>false</TieredCompilation>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="ScottPlot" Version="5.0.54" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\RecursiveLab.Core\RecursiveLab.Core.csproj" />
+  </ItemGroup>
+</Project>

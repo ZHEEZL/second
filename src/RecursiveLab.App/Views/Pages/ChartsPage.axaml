@@ -1,0 +1,91 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ScottPlot="clr-namespace:ScottPlot.Avalonia;assembly=ScottPlot.Avalonia"
+             x:Class="RecursiveLab.App.Views.Pages.ChartsPage">
+
+  <Grid RowDefinitions="Auto,Auto,*" Margin="0,8,0,0">
+    <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="4,0,4,8">
+      <StackPanel Spacing="3" VerticalAlignment="Center">
+        <TextBlock Text="ЗАМЕРЫ: ЭКСПЕРИМЕНТ И ТЕОРИЯ" Classes="section" />
+        <TextBlock Classes="hint"
+                   Text="Замеры можно выполнить прямо здесь: кнопка «Замерить» прогоняет все четыре алгоритма и обновляет графики. Пунктир — модельная кривая; для судоку это эмпирическая C·a^m." />
+      </StackPanel>
+
+      <StackPanel Grid.Column="1" Spacing="3" Margin="18,0,0,0" VerticalAlignment="Center">
+        <Button Name="MeasureButton"
+                Classes="primary"
+                Content="Замерить"
+                HorizontalAlignment="Stretch" />
+        <TextBlock Name="BenchmarkStatus"
+                   Text="Данные из benchmarks/results"
+                   Classes="label"
+                   FontSize="10.5"
+                   HorizontalAlignment="Center" />
+      </StackPanel>
+    </Grid>
+
+    <ProgressBar Grid.Row="1"
+                 Name="BenchmarkProgress"
+                 Minimum="0"
+                 Maximum="4"
+                 Value="0"
+                 Height="5"
+                 Margin="4,0,4,8" />
+
+    <TabControl Grid.Row="2">
+      <TabItem Header="H-дерево">
+        <Border Classes="card" Padding="10">
+          <Grid RowDefinitions="Auto,*">
+            <TextBlock Text="Время генерации: факт и C·4^d"
+                       Classes="label"
+                       Margin="4,0,0,4" />
+            <ScottPlot:AvaPlot Grid.Row="1" Name="HtreePlot" />
+          </Grid>
+        </Border>
+      </TabItem>
+
+      <TabItem Header="Судоку">
+        <Border Classes="card" Padding="10">
+          <Grid RowDefinitions="Auto,*">
+            <TextBlock Text="Время решения и эмпирическая модель C·a^m (O(9^m) — верхняя оценка)"
+                       Classes="label"
+                       Margin="4,0,0,4" />
+            <ScottPlot:AvaPlot Grid.Row="1" Name="SudokuPlot" />
+          </Grid>
+        </Border>
+      </TabItem>
+
+      <TabItem Header="Ближайшая пара">
+        <Grid RowDefinitions="*,*" RowSpacing="12">
+          <Border Classes="card" Padding="10">
+            <Grid RowDefinitions="Auto,*">
+              <TextBlock Text="Divide and conquer: факт и C·n·log₂n"
+                         Classes="label"
+                         Margin="4,0,0,4" />
+              <ScottPlot:AvaPlot Grid.Row="1" Name="DncPlot" />
+            </Grid>
+          </Border>
+          <Border Grid.Row="1" Classes="card" Padding="10">
+            <Grid RowDefinitions="Auto,*">
+              <TextBlock Text="Полный перебор: факт и C·n²"
+                         Classes="label"
+                         Margin="4,0,0,4" />
+              <ScottPlot:AvaPlot Grid.Row="1" Name="BrutePlot" />
+            </Grid>
+          </Border>
+        </Grid>
+      </TabItem>
+
+      <TabItem Header="Ханойские башни">
+        <Border Classes="card" Padding="10">
+          <Grid RowDefinitions="Auto,*">
+            <TextBlock Text="Время решения: факт и C·2^n"
+                       Classes="label"
+                       Margin="4,0,0,4" />
+            <ScottPlot:AvaPlot Grid.Row="1" Name="HanoiPlot" />
+          </Grid>
+        </Border>
+      </TabItem>
+    </TabControl>
+  </Grid>
+</UserControl>

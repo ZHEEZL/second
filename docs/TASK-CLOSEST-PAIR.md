@@ -3,6 +3,9 @@
 **Статус:** готово (алгоритм + анимация шагов). **Автор:** участник 1.
 **Ветка:** `feature/closest-pair`.
 
+> Полный отчёт с теорией, замерами и графиками:
+> [CLOSEST-PAIR-REPORT.md](CLOSEST-PAIR-REPORT.md).
+
 ## Файлы
 
 - Алгоритм: `src/RecursiveLab.Core/Tasks/ClosestPair/DivideAndConquerClosestPair.cs`
@@ -54,6 +57,20 @@ public sealed record ClosestPairResult(
 «Перебор (эталон)» он уже подключён. Свой алгоритм должен давать **то же
 расстояние** (пары могут быть разными при равных расстояниях). Использовать
 перебор внутри своего решения нельзя — это будет видно по числу сравнений.
+
+## Замеры
+
+Стенд: `benchmarks/RecursiveLab.Benchmarks` (консоль, .NET 8, ScottPlot).
+
+```powershell
+dotnet run --project benchmarks/RecursiveLab.Benchmarks
+```
+
+Результаты: `benchmarks/results/closest-pair.csv` и `summary.md`;
+графики — `docs/charts/closest-pair-*.png`.
+Методика как в лабораторной №1: фиксированный seed, прогрев, 5 повторов,
+медиана, CSV и графики. Те же графики доступны в приложении на странице
+«Замеры» (кнопка «Замерить» пересчитывает данные на месте).
 
 ## Приёмка
 

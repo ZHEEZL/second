@@ -16,6 +16,7 @@
 | Судоку | участник 2 | готово | `src/RecursiveLab.Core/Tasks/Sudoku/BacktrackingSudokuSolver.cs` |
 | Ближайшая пара точек | участник 1 | готово | `src/RecursiveLab.Core/Tasks/ClosestPair/DivideAndConquerClosestPair.cs` |
 | Ханойские башни | команда    | готово | `src/RecursiveLab.Core/Tasks/Hanoi/RecursiveHanoiSolver.cs`, `StackHanoiSolver.cs` |
+| Замеры и графики | команда    | готово | `src/RecursiveLab.App/Views/Pages/ChartsPage.axaml` |
 
 
 ## Соответствие лабораторной (PDF)
@@ -39,8 +40,13 @@
 - **Ближайшая пара.** Генерация случайных точек (10–2000), анимация шагов
   (разбиение, полоса, смена лучшей пары) с ползунком скорости, кнопка
   «Перебор (эталон)» для проверки ответа, подсветка найденной пары.
+  Полный отчёт с теорией, замерами и графиками —
+  [`docs/CLOSEST-PAIR-REPORT.md`](docs/CLOSEST-PAIR-REPORT.md).
 - **Ханойские башни.** Выбор числа колец, режим «рекурсия» / «стек»,
   анимация ходов, скорость, счётчики ходов и времени.
+- **Замеры.** Страница с графиками «эксперимент + модель» для всех четырёх
+  алгоритмов. Кнопка «Замерить» выполняет замеры прямо в приложении и
+  обновляет графики без консоли.
 
 ## Быстрый старт
 
@@ -73,6 +79,34 @@ dotnet test
 dotnet run --project src/RecursiveLab.Smoke -- artifacts/screenshots
 ```
 
+## Замеры и графики
+
+Страница **«Замеры»** в приложении показывает для H-дерева, судоку,
+ближайшей пары и Ханойских башен экспериментальные точки и модель: для
+H-дерева, Ханоя и ближайшей пары — теоретическую кривую `C·f(n)`, для
+судоку — эмпирическую `C·a^m` (верхняя оценка `O(9^m)` слишком пессимистична
+для масштаба графика). Кнопка **«Замерить»** прогоняет замеры прямо в
+приложении (прогрев, 5 повторов, медиана) и обновляет графики.
+
+Те же замеры можно выполнить консольным стендом — методика как в
+лабораторной №1 (фиксированный seed, прогрев, повторы, медиана, CSV,
+ScottPlot):
+
+```powershell
+dotnet run --project benchmarks/RecursiveLab.Benchmarks
+```
+
+Результаты и графики:
+
+- `benchmarks/results/htree.csv`, `hanoi.csv`, `sudoku.csv`;
+- `benchmarks/results/closest-pair.csv` и `summary.md`;
+- `docs/charts/htree-theory.png`, `sudoku-theory.png`,
+  `closest-pair-dnc-theory.png`, `hanoi-theory.png` и другие;
+- [`docs/CLOSEST-PAIR-REPORT.md`](docs/CLOSEST-PAIR-REPORT.md) — полный отчёт
+  по ближайшей паре: теория, псевдокод, корректность, сложность, результаты.
+
+Готовый отчёт по лабораторной с добавленным разделом замеров:
+[`docs/report/Lab2_Recursion_Report_updated.docx`](docs/report/Lab2_Recursion_Report_updated.docx).
 
 ## Структура
 
@@ -88,8 +122,10 @@ RecursiveLab.sln
 │   │       └── Hanoi/            # рекурсия и стек (готово)
 │   ├── RecursiveLab.App/         # Avalonia: окно, навигация, тема, страницы
 │   └── RecursiveLab.Smoke/       # headless-скриншоты для проверки вёрстки
+├── benchmarks/
+│   └── RecursiveLab.Benchmarks/  # замеры всех алгоритмов, CSV и графики ScottPlot
 ├── tests/RecursiveLab.Tests/     # xUnit-тесты + контрактные тесты для участников
-├── docs/                         # планы, задания участникам, скриншоты
+├── docs/                         # планы, задания участникам, отчёт, скриншоты, графики
 └── scripts/dotnet.ps1            # dotnet с локальными кэшами (для песочниц)
 ```
 
@@ -102,3 +138,5 @@ RecursiveLab.sln
 | Ближайшая пара | Ханойские башни |
 |----------------|-----------------|
 | ![](docs/screenshots/closest-pair.png) | ![](docs/screenshots/hanoi.png) |
+
+![Замеры и графики](docs/screenshots/charts.png)
