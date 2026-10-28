@@ -1,0 +1,180 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:RecursiveLab.App.Controls"
+             x:Class="RecursiveLab.App.Views.Pages.SudokuGeneratorPage">
+
+  <Grid ColumnDefinitions="*,336">
+
+    <!-- Доска -->
+    <Border Grid.Column="0"
+            Classes="card"
+            Padding="14"
+            Margin="0,0,18,0"
+            ClipToBounds="True">
+      <Grid RowDefinitions="Auto,*,Auto">
+        <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="4,0,4,8">
+          <StackPanel Orientation="Horizontal" Spacing="10">
+            <TextBlock Text="SUDOKU GENERATOR" Classes="section" VerticalAlignment="Center" />
+            <TextBlock Name="HudClues"
+                       Text="подсказок — / 81"
+                       FontSize="11"
+                       Classes="muted"
+                       VerticalAlignment="Center" />
+          </StackPanel>
+          <TextBlock Grid.Column="1"
+                     Text="рекурсия + проверка единственности"
+                     FontSize="10.5"
+                     Classes="muted"
+                     VerticalAlignment="Center" />
+        </Grid>
+
+        <controls:SudokuBoardView Grid.Row="1" Name="BoardView" />
+
+        <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="7" Margin="4,8,4,0">
+          <Ellipse Name="HudDot" Width="6" Height="6" Fill="{StaticResource LabMuted}" />
+          <TextBlock Name="HudSolutions" Text="задача ещё не создана" FontSize="10.5" Classes="muted" />
+        </StackPanel>
+      </Grid>
+    </Border>
+
+    <!-- Панель управления -->
+    <ScrollViewer Grid.Column="1"
+                  VerticalScrollBarVisibility="Auto"
+                  HorizontalScrollBarVisibility="Disabled">
+      <StackPanel Spacing="12" Margin="0,0,4,0">
+
+        <Border Classes="card">
+          <StackPanel Spacing="10">
+            <TextBlock Text="ПАРАМЕТРЫ" Classes="section" />
+
+            <TextBlock Text="Сложность" Classes="label" />
+            <ComboBox Name="DifficultyCombo" HorizontalAlignment="Stretch" />
+
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+              <TextBlock Text="Подсказок на доске" Classes="label" VerticalAlignment="Center" />
+              <NumericUpDown Name="CluesInput"
+                             Grid.Column="1"
+                             Width="120"
+                             Minimum="17"
+                             Maximum="80"
+                             Increment="1"
+                             Value="36"
+                             FormatString="0" />
+            </Grid>
+
+            <TextBlock Name="RemovalText" Classes="accent" Text="убрать 45 из 81 клеток (56%)" />
+            <TextBlock Name="CluesWarning"
+                       Classes="hint"
+                       Foreground="{StaticResource LabWarning}"
+                       IsVisible="False"
+                       Text="Меньше 24 подсказок получается не всегда: программа оставит минимум, при котором решение ещё единственное, и честно покажет, сколько вышло." />
+
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+              <TextBlock Text="Зерно (seed)" Classes="label" VerticalAlignment="Center" />
+              <TextBox Name="SeedInput" Grid.Column="1" Width="120" Watermark="случайное" />
+            </Grid>
+
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+              <Button Name="GenerateButton" Classes="primary" Content="Сгенерировать" HorizontalAlignment="Stretch" />
+              <Button Name="CancelButton" Grid.Column="1" Content="Отмена" IsEnabled="False" />
+            </Grid>
+          </StackPanel>
+        </Border>
+
+        <Border Classes="card">
+          <StackPanel Spacing="10">
+            <TextBlock Text="РЕЗУЛЬТАТ" Classes="section" />
+
+            <Border Background="#0E1A30"
+                    BorderBrush="{StaticResource LabBorderSoft}"
+                    BorderThickness="1"
+                    CornerRadius="10"
+                    Padding="11,9">
+              <TextBlock Name="StatusText"
+                         Text="Выберите сложность и нажмите «Сгенерировать»."
+                         FontSize="11.5"
+                         TextWrapping="Wrap"
+                         Foreground="{StaticResource LabMuted}" />
+            </Border>
+
+            <Grid ColumnDefinitions="*,*,*" RowDefinitions="Auto,Auto" ColumnSpacing="8" RowSpacing="8">
+              <StackPanel>
+                <TextBlock Text="подсказок" Classes="label" />
+                <TextBlock Name="StatClues" Text="—" Classes="value" />
+              </StackPanel>
+              <StackPanel Grid.Column="1">
+                <TextBlock Text="решений" Classes="label" />
+                <TextBlock Name="StatSolutions" Text="—" Classes="value" />
+              </StackPanel>
+              <StackPanel Grid.Column="2">
+                <TextBlock Text="попыток" Classes="label" />
+                <TextBlock Name="StatAttempts" Text="—" Classes="value" />
+              </StackPanel>
+              <StackPanel Grid.Row="1">
+                <TextBlock Text="вызовов" Classes="label" />
+                <TextBlock Name="StatCalls" Text="—" Classes="value" />
+              </StackPanel>
+              <StackPanel Grid.Row="1" Grid.Column="1">
+                <TextBlock Text="время" Classes="label" />
+                <TextBlock Name="StatTime" Text="—" Classes="value" />
+              </StackPanel>
+              <StackPanel Grid.Row="1" Grid.Column="2">
+                <TextBlock Text="seed" Classes="label" />
+                <TextBlock Name="StatSeed" Text="—" Classes="value" />
+              </StackPanel>
+            </Grid>
+
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
+              <Button Name="CheckButton" Content="Проверить ввод" HorizontalAlignment="Stretch" />
+              <Button Name="SolutionButton" Grid.Column="1" Content="Показать ответ" HorizontalAlignment="Stretch" />
+            </Grid>
+            <Button Name="ResetButton" Classes="ghost" HorizontalAlignment="Left" Content="Стереть мой ввод" />
+
+            <TextBlock Classes="hint"
+                       Text="Можно решать прямо здесь: кликните по клетке и введите 1–9. Подсказки из условия не меняются." />
+          </StackPanel>
+        </Border>
+
+        <Border Classes="card">
+          <StackPanel Spacing="10">
+            <TextBlock Text="ПЕЧАТЬ" Classes="section" />
+            <CheckBox Name="AnswersCheck" IsChecked="True" Content="Добавить страницу с ответами" />
+            <Button Name="SavePdfButton" Content="Сохранить PDF…" HorizontalAlignment="Stretch" IsEnabled="False" />
+            <TextBlock Classes="hint" Text="Лист A4: условие на первой странице, ответы — на второй." />
+          </StackPanel>
+        </Border>
+
+        <Border Classes="card">
+          <StackPanel Spacing="9">
+            <TextBlock Text="ДЕРЕВО РЕКУРСИИ" Classes="section" />
+            <TextBlock Classes="hint"
+                       TextWrapping="Wrap"
+                       Text="Две рекурсии генератора: построение полной сетки (Fill) и проверка единственности итоговой задачи (подсчёт решений с лимитом 2)." />
+            <Button Name="RecursionTreeButton"
+                    Content="Показать дерево рекурсии"
+                    HorizontalAlignment="Stretch" />
+          </StackPanel>
+        </Border>
+
+        <Border Classes="card">
+          <StackPanel Spacing="9">
+            <TextBlock Text="КАК ЭТО РАБОТАЕТ" Classes="section" />
+            <TextBlock Classes="hint"
+                       TextWrapping="Wrap"
+                       Text="1. Рекурсивный перебор с возвратом строит полную сетку, пробуя цифры в случайном порядке (перемешивание Фишера–Йетса). 2. Клетки убираются по кругу по блокам 3×3, чтобы дыры шли равномерно. 3. После каждого удаления рекурсивный подсчёт решений с лимитом 2 проверяет, что решение осталось одно; если нет — цифра возвращается." />
+            <TextBlock Classes="label"
+                       Text="src/RecursiveLab.Core/Tasks/Sudoku/RandomizedSudokuGenerator.cs"
+                       FontFamily="Cascadia Code, Consolas, monospace"
+                       FontSize="10"
+                       TextWrapping="Wrap" />
+            <Button Name="OpenCodeButton"
+                    Classes="ghost"
+                    HorizontalAlignment="Left"
+                    Content="Открыть код генератора" />
+          </StackPanel>
+        </Border>
+
+      </StackPanel>
+    </ScrollViewer>
+  </Grid>
+</UserControl>

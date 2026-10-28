@@ -3,8 +3,10 @@ using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
+using RecursiveLab.App.Services;
 using RecursiveLab.App.Views;
 using RecursiveLab.App.Views.Pages;
+using RecursiveLab.Core.Tasks.Sudoku;
 
 namespace RecursiveLab.Smoke;
 
@@ -14,7 +16,7 @@ namespace RecursiveLab.Smoke;
 /// </summary>
 internal static class Program
 {
-    private static readonly string[] TaskIds = ["htree", "sudoku", "closest", "hanoi", "charts"];
+    private static readonly string[] TaskIds = ["htree", "sudoku", "sudoku-gen", "closest", "hanoi"];
 
     public static int Main(string[] args)
     {
@@ -108,6 +110,40 @@ internal static class Program
                 frame.Save(path);
                 Console.WriteLine($"[ok] closest reference -> {path}");
             }
+        }
+
+        // PDF генератора судоку: файл должен создаться и начинаться с сигнатуры %PDF-.
+        try
+        {
+            var sample = new RandomizedSudokuGenerator()
+                .Generate(new SudokuGenerationOptions(36, Seed: 2026));
+            var pdfPath = Path.Combine(outDir, "sudoku-sample.pdf");
+
+            using (var file = File.Create(pdfPath))
+            {
+                SudokuPdfExporter.Export(sample, file, SudokuPdfOptions.For(sample, "Средняя", includeAnswers: true));
+            }
+
+            var header = new byte[5];
+            using (var check = File.OpenRead(pdfPath))
+            {
+                check.ReadExactly(header);
+            }
+
+            if (System.Text.Encoding.ASCII.GetString(header) == "%PDF-")
+            {
+                Console.WriteLine($"[ok] sudoku pdf -> {pdfPath}");
+            }
+            else
+            {
+                Console.WriteLine("[FAIL] sudoku pdf: файл не похож на PDF");
+                failed = true;
+            }
+        }
+        catch (Exception exception)
+        {
+            Console.WriteLine($"[FAIL] sudoku pdf: {exception.Message}");
+            failed = true;
         }
 
         return failed ? 1 : 0;
