@@ -125,6 +125,18 @@
 
         <Border Classes="card">
           <StackPanel Spacing="9">
+            <TextBlock Text="ДЕРЕВО РЕКУРСИИ" Classes="section" />
+            <TextBlock Classes="hint"
+                       TextWrapping="Wrap"
+                       Text="Узел — вызов Move(n, откуда, куда): левый ребёнок переносит n−1 диск в сторону, правый — обратно. Стек-версия обходит то же самое дерево." />
+            <Button Name="RecursionTreeButton"
+                    Content="Показать дерево рекурсии"
+                    HorizontalAlignment="Stretch" />
+          </StackPanel>
+        </Border>
+
+        <Border Classes="card">
+          <StackPanel Spacing="9">
             <TextBlock Text="УЧАСТНИКУ" Classes="section" />
             <TextBlock Classes="hint"
                        Text="Задание 2: рекурсивное решение. Доп. задание: тот же алгоритм через явный стек — выберите режим в списке выше." />

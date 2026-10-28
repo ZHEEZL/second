@@ -30,10 +30,23 @@
 
         <controls:SudokuBoardView Grid.Row="1" Name="BoardView" />
 
-        <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="7" Margin="4,8,4,0">
-          <Ellipse Name="HudDot" Width="6" Height="6" Fill="{StaticResource LabMuted}" />
-          <TextBlock Name="HudSolutions" Text="задача ещё не создана" FontSize="10.5" Classes="muted" />
-        </StackPanel>
+        <Grid Grid.Row="2" ColumnDefinitions="*,Auto" Margin="4,8,4,0">
+          <StackPanel Orientation="Horizontal" Spacing="7" VerticalAlignment="Center">
+            <Ellipse Name="HudDot" Width="6" Height="6" Fill="{StaticResource LabMuted}" />
+            <TextBlock Name="HudSolutions" Text="задача ещё не создана" FontSize="10.5" Classes="muted" />
+          </StackPanel>
+
+          <!-- Листание подборки: видно, только если задач больше одной -->
+          <StackPanel Name="BatchNavigation"
+                      Grid.Column="1"
+                      Orientation="Horizontal"
+                      Spacing="8"
+                      IsVisible="False">
+            <Button Name="PrevButton" Content="◀" Padding="10,4" ToolTip.Tip="Предыдущая задача" />
+            <TextBlock Name="BatchText" Text="задача 1 из 1" Classes="label" VerticalAlignment="Center" />
+            <Button Name="NextButton" Content="▶" Padding="10,4" ToolTip.Tip="Следующая задача" />
+          </StackPanel>
+        </Grid>
       </Grid>
     </Border>
 
@@ -68,6 +81,18 @@
                        Foreground="{StaticResource LabWarning}"
                        IsVisible="False"
                        Text="Меньше 24 подсказок получается не всегда: программа оставит минимум, при котором решение ещё единственное, и честно покажет, сколько вышло." />
+
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+              <TextBlock Text="Задач в подборке" Classes="label" VerticalAlignment="Center" />
+              <NumericUpDown Name="CountInput"
+                             Grid.Column="1"
+                             Width="120"
+                             Minimum="1"
+                             Maximum="100"
+                             Increment="1"
+                             Value="1"
+                             FormatString="0" />
+            </Grid>
 
             <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
               <TextBlock Text="Зерно (seed)" Classes="label" VerticalAlignment="Center" />
@@ -138,9 +163,23 @@
         <Border Classes="card">
           <StackPanel Spacing="10">
             <TextBlock Text="ПЕЧАТЬ" Classes="section" />
-            <CheckBox Name="AnswersCheck" IsChecked="True" Content="Добавить страницу с ответами" />
+
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+              <TextBlock Text="Задач на листе A4" Classes="label" VerticalAlignment="Center" />
+              <ComboBox Name="PerPageCombo" Grid.Column="1" Width="150" />
+            </Grid>
+
+            <CheckBox Name="AnswersCheck" IsChecked="True" Content="Ответы в конце (по 12 на листе)" />
+            <TextBlock Name="PaperText" Classes="accent" Text="—" TextWrapping="Wrap" />
+
             <Button Name="SavePdfButton" Content="Сохранить PDF…" HorizontalAlignment="Stretch" IsEnabled="False" />
-            <TextBlock Classes="hint" Text="Лист A4: условие на первой странице, ответы — на второй." />
+            <Button Name="ShowFileButton"
+                    Classes="ghost"
+                    HorizontalAlignment="Left"
+                    Content="Показать сохранённый файл"
+                    IsEnabled="False" />
+            <TextBlock Classes="hint"
+                       Text="В файл попадает вся подборка. Чем больше задач на листе, тем меньше бумаги: по 6 — сетки около 7 см, этого хватает, чтобы решать ручкой." />
           </StackPanel>
         </Border>
 

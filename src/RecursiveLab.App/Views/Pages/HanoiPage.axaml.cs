@@ -8,6 +8,7 @@ using Avalonia.Media;
 using Avalonia.Threading;
 using RecursiveLab.App.Controls;
 using RecursiveLab.App.Services;
+using RecursiveLab.Core.Recursion;
 using RecursiveLab.Core.Tasks.Hanoi;
 
 namespace RecursiveLab.App.Views.Pages;
@@ -96,6 +97,7 @@ public partial class HanoiPage : UserControl
 
         Get<Button>("SolveButton").Click += OnSolveClicked;
         Get<Button>("ResetButton").Click += (_, _) => ResetTower();
+        Get<Button>("RecursionTreeButton").Click += (_, _) => ShowRecursionTree();
         Get<Button>("OpenCodeButton").Click += (_, _) =>
         {
             var file = _modeCombo.SelectedIndex == 1
@@ -260,6 +262,25 @@ public partial class HanoiPage : UserControl
 
     private void SetHudDot(string hex) =>
         this.FindControl<Ellipse>("HudDot")!.Fill = new SolidColorBrush(Color.Parse(hex));
+
+    private void ShowRecursionTree()
+    {
+        try
+        {
+            var recorder = new RecursionTraceRecorder(
+                $"Ханойские башни: {_diskCount} дисков",
+                "Узел — вызов Move(n, откуда, куда). Левый ребёнок — Move(n−1) на вспомогательный стержень, " +
+                "между детьми переносится диск n, правый ребёнок — Move(n−1) на целевой стержень. " +
+                "Листья «0» — базовый случай. Режим «стек» обходит то же дерево: каждый кадр стека — это узел.");
+
+            new RecursiveHanoiSolver().SolveTraced(_diskCount, recorder);
+            RecursionTreeWindow.ShowFor(this, recorder.Build());
+        }
+        catch (Exception exception)
+        {
+            SetStatus($"Не удалось построить дерево: {exception.Message}", DangerBrush);
+        }
+    }
 
     private T Get<T>(string name) where T : Control =>
         this.FindControl<T>(name)
