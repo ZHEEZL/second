@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using RecursiveLab.Core.Geometry;
+using RecursiveLab.Core.Recursion;
 
 namespace RecursiveLab.Core.Tasks.ClosestPair;
 
@@ -28,6 +29,14 @@ public sealed class DivideAndConquerClosestPair : IClosestPairFinder
     public ClosestPairResult Find(
         IReadOnlyList<Geometry.PointD> points,
         Action<ClosestPairStep>? onStep = null,
+        CancellationToken cancellationToken = default) =>
+        FindTraced(points, tracer: null, onStep, cancellationToken);
+
+    /// <summary>То же самое, но каждый вызов Solve(lo, hi) записывается в дерево рекурсии.</summary>
+    public ClosestPairResult FindTraced(
+        IReadOnlyList<PointD> points,
+        IRecursionTracer? tracer,
+        Action<ClosestPairStep>? onStep = null,
         CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(points);
@@ -46,7 +55,7 @@ public sealed class DivideAndConquerClosestPair : IClosestPairFinder
         long comparisons = 0;
         long calls = 0;
 
-        var best = Solve(arr, 0, arr.Length, ref comparisons, ref calls, onStep, cancellationToken);
+        var best = Solve(arr, 0, arr.Length, ref comparisons, ref calls, onStep, cancellationToken, tracer);
         var distance = Math.Sqrt(best.DistSquared);
 
         onStep?.Invoke(new ClosestPairStep(
@@ -61,12 +70,15 @@ public sealed class DivideAndConquerClosestPair : IClosestPairFinder
     }
 
     private static Pair Solve(PointD[] arr, int lo, int hi, ref long comparisons, ref long calls, Action<ClosestPairStep>? onStep,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken, IRecursionTracer? tracer)
     {
         calls++;
         cancellationToken.ThrowIfCancellationRequested();
 
         var count = hi - lo;
+
+        // Узел дерева рекурсии = один вызов Solve на отрезке [lo; hi) отсортированного массива.
+        var node = tracer?.Enter($"[{lo};{hi})", $"Solve(lo = {lo}, hi = {hi}): {count} точек") ?? 0;
 
         if (count <= 3)
         {
@@ -92,6 +104,11 @@ public sealed class DivideAndConquerClosestPair : IClosestPairFinder
                 B: baseBest.B,
                 Distance: Math.Sqrt(baseBest.DistSquared)));
 
+            tracer?.Exit(
+                node,
+                RecursionOutcome.BaseCase,
+                $"база: перебор {count} точек, d = {Math.Sqrt(baseBest.DistSquared):0.####}");
+
             return baseBest;
         }
 
@@ -103,8 +120,10 @@ public sealed class DivideAndConquerClosestPair : IClosestPairFinder
             $"Делим [{lo}; {hi}) по x = {midX:0.###}",
             X0: midX));
 
-        var left = Solve(arr, lo, mid, ref comparisons, ref calls, onStep, cancellationToken);
-        var right = Solve(arr, mid, hi, ref comparisons, ref calls, onStep, cancellationToken);
+        tracer?.Note($"делим по x = {midX:0.###}: [{lo};{mid}) и [{mid};{hi})");
+
+        var left = Solve(arr, lo, mid, ref comparisons, ref calls, onStep, cancellationToken, tracer);
+        var right = Solve(arr, mid, hi, ref comparisons, ref calls, onStep, cancellationToken, tracer);
 
         var best = left.DistSquared <= right.DistSquared ? left : right;
 
@@ -155,6 +174,12 @@ public sealed class DivideAndConquerClosestPair : IClosestPairFinder
                 }
             }
         }
+
+        tracer?.Exit(
+            node,
+            RecursionOutcome.Completed,
+            $"d = {Math.Sqrt(best.DistSquared):0.####}; в полосе {strip.Count} точек");
+
         return best;
 
     }

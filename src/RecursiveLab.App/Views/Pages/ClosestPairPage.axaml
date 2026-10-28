@@ -113,6 +113,18 @@
 
         <Border Classes="card">
           <StackPanel Spacing="9">
+            <TextBlock Text="ДЕРЕВО РЕКУРСИИ" Classes="section" />
+            <TextBlock Classes="hint"
+                       TextWrapping="Wrap"
+                       Text="Узел — вызов Solve(lo, hi) на отрезке отсортированного массива: он делится пополам, листья — база из 2–3 точек. Строится для текущих точек." />
+            <Button Name="RecursionTreeButton"
+                    Content="Показать дерево рекурсии"
+                    HorizontalAlignment="Stretch" />
+          </StackPanel>
+        </Border>
+
+        <Border Classes="card">
+          <StackPanel Spacing="9">
             <TextBlock Text="УЧАСТНИКУ" Classes="section" />
             <TextBlock Classes="hint"
                        Text="Разделить по медиане X → решить половины рекурсивно → проверить полосу 2d, отсортировав её по Y." />

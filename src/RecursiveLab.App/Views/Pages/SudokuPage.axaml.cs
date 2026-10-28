@@ -10,6 +10,7 @@ using Avalonia.Media;
 using Avalonia.Threading;
 using RecursiveLab.App.Controls;
 using RecursiveLab.App.Services;
+using RecursiveLab.Core.Recursion;
 using RecursiveLab.Core.Tasks.Sudoku;
 
 namespace RecursiveLab.App.Views.Pages;
@@ -40,6 +41,7 @@ public partial class SudokuPage : UserControl
     private bool _isPlaying;
 
     private SudokuBoard _board = new();
+    private SudokuBoard? _lastSolveInput; // доска, с которой запускали решение (для дерева рекурсии)
     private bool _initialized;
     private double _speed = 1;
 
@@ -80,6 +82,7 @@ public partial class SudokuPage : UserControl
         Get<Button>("ResetButton").Click += (_, _) => LoadPreset(_presetCombo.SelectedIndex);
         Get<Button>("CheckButton").Click += (_, _) => CheckCurrentBoard();
         Get<Button>("SolveButton").Click += OnSolveClicked;
+        Get<Button>("RecursionTreeButton").Click += (_, _) => ShowRecursionTree();
         Get<Button>("OpenCodeButton").Click += (_, _) =>
             RepoPaths.ShowInExplorer("src/RecursiveLab.Core/Tasks/Sudoku/BacktrackingSudokuSolver.cs");
 
@@ -109,6 +112,7 @@ public partial class SudokuPage : UserControl
         }
 
         var preset = SudokuPresets.All[index];
+        _lastSolveInput = null;
         _board = SudokuBoard.Parse(preset.Board);
         _boardView.Board = _board;
         _boardView.Conflicts = _board.FindConflicts();
@@ -173,6 +177,7 @@ public partial class SudokuPage : UserControl
             var stepsList = new List<SudokuStep>();
 
             // Собираем шаги из твоего алгоритма
+            _lastSolveInput = _board.Clone();
             var result = solver.Solve(_board.Clone(), step => stepsList.Add(step));
 
             if (!result.Solved || result.Board is null)
@@ -307,6 +312,27 @@ public partial class SudokuPage : UserControl
     {
         _statusText.Text = text;
         _statusText.Foreground = brush;
+    }
+
+    private void ShowRecursionTree()
+    {
+        // Если решение уже запускали — берём доску, с которой стартовали, иначе текущую.
+        var source = _lastSolveInput ?? _board.Clone();
+
+        try
+        {
+            var recorder = new RecursionTraceRecorder(
+                "Решатель судоку: backtracking + MRV",
+                "Корень — старт. Узел — «поставили цифру в выбранную по MRV клетку и вызвали рекурсию дальше». " +
+                "Зелёная ветка — путь к решению, красные — тупики, после которых цифра стирается (откат).");
+
+            new BacktrackingSudokuSolver().SolveTraced(source, recorder);
+            RecursionTreeWindow.ShowFor(this, recorder.Build());
+        }
+        catch (Exception exception)
+        {
+            SetStatus($"Не удалось построить дерево: {exception.Message}", DangerBrush);
+        }
     }
 
     private T Get<T>(string name) where T : Control =>

@@ -7,6 +7,7 @@ using Avalonia.Media;
 using Avalonia.Threading;
 using RecursiveLab.App.Controls;
 using RecursiveLab.App.Services;
+using RecursiveLab.Core.Recursion;
 using RecursiveLab.Core.Geometry;
 using RecursiveLab.Core.Tasks.ClosestPair;
 
@@ -85,6 +86,7 @@ public partial class ClosestPairPage : UserControl
         Get<Button>("GenerateButton").Click += (_, _) => GeneratePoints(newSeed: true);
         Get<Button>("FindButton").Click += OnFindClicked;
         Get<Button>("ReferenceButton").Click += OnReferenceClicked;
+        Get<Button>("RecursionTreeButton").Click += (_, _) => ShowRecursionTree();
         Get<Button>("OpenCodeButton").Click += (_, _) =>
             RepoPaths.ShowInExplorer("src/RecursiveLab.Core/Tasks/ClosestPair/DivideAndConquerClosestPair.cs");
 
@@ -314,6 +316,24 @@ public partial class ClosestPairPage : UserControl
     private void SetHudStatus(string text) => _hudStatus.Text = text;
 
     private void SetHudDot(string hex) => _hudDot!.Fill = new SolidColorBrush(Color.Parse(hex));
+
+    private void ShowRecursionTree()
+    {
+        try
+        {
+            var recorder = new RecursionTraceRecorder(
+                $"Ближайшая пара: {_points.Count} точек",
+                "Узел — вызов Solve(lo, hi) на отрезке массива, отсортированного по X. Каждый вызов делит отрезок " +
+                "пополам и после двух рекурсивных вызовов проверяет полосу 2d. Фиолетовые листья — база: ≤ 3 точек, перебор.");
+
+            new DivideAndConquerClosestPair().FindTraced(_points, recorder);
+            RecursionTreeWindow.ShowFor(this, recorder.Build());
+        }
+        catch (Exception exception)
+        {
+            SetStatus($"Не удалось построить дерево: {exception.Message}", DangerBrush);
+        }
+    }
 
     private T Get<T>(string name) where T : Control =>
         this.FindControl<T>(name)
