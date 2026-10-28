@@ -104,6 +104,18 @@
 
         <Border Classes="card">
           <StackPanel Spacing="9">
+            <TextBlock Text="ДЕРЕВО РЕКУРСИИ" Classes="section" />
+            <TextBlock Classes="hint"
+                       TextWrapping="Wrap"
+                       Text="Узел — «поставили цифру в клетку и вызвали рекурсию дальше». Зелёный путь ведёт к решению, красные ветки — тупики с откатом. Строится для текущего условия." />
+            <Button Name="RecursionTreeButton"
+                    Content="Показать дерево рекурсии"
+                    HorizontalAlignment="Stretch" />
+          </StackPanel>
+        </Border>
+
+        <Border Classes="card">
+          <StackPanel Spacing="9">
             <TextBlock Text="КАК ЭТО РАБОТАЕТ" Classes="section" />
             <TextBlock Classes="hint"
                        Text="Алгоритм использует рекурсивный перебор с возвратом (backtracking). Благодаря внедренной эвристике MRV (Minimum Remaining Values), на каждом шаге алгоритм выбирает пустую клетку с наименьшим числом возможных кандидатов. Это позволяет отсекать тупиковые ветви на самых ранних этапах и решать даже самые сложные судоку за миллисекунды."

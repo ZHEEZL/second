@@ -1,4 +1,5 @@
 using RecursiveLab.Core.Geometry;
+using RecursiveLab.Core.Recursion;
 
 namespace RecursiveLab.Core.Tasks.HTree;
 
@@ -18,11 +19,14 @@ public static class HTreeGenerator
     /// <summary>Во сколько раз меньше каждая следующая H: 1 / sqrt(2).</summary>
     public const double ChildScale = 0.7071067811865476;
 
-    /// <summary>Максимальная поддерживаемая глубина (262 143 отрезка — уже тяжело для UI).</summary>
+    /// <summary>Максимальная поддерживаемая глубина (65 535 отрезков — уже тяжело для UI).</summary>
     public const int MaxDepth = 7;
 
-    /// <summary>Строит H-дерево с центром в (0; 0) и размером <paramref name="size"/>.</summary>
-    public static IReadOnlyList<Segment> Generate(double size = 1.0, int depth = 5)
+    /// <summary>
+    /// Строит H-дерево с центром в (0; 0) и размером <paramref name="size"/>.
+    /// Если передан <paramref name="tracer"/>, каждый вызов Build записывается в дерево рекурсии.
+    /// </summary>
+    public static IReadOnlyList<Segment> Generate(double size = 1.0, int depth = 5, IRecursionTracer? tracer = null)
     {
         if (size <= 0 || double.IsNaN(size) || double.IsInfinity(size))
         {
@@ -37,7 +41,7 @@ public static class HTreeGenerator
         // 4^(depth+1) - 1 отрезков. Для depth = 7 это 65 535.
         var capacity = SegmentCount(depth);
         var segments = new List<Segment>(capacity);
-        Build(0, 0, size, 0, depth, segments);
+        Build(0, 0, size, 0, depth, segments, tracer);
         return segments;
     }
 
@@ -47,9 +51,15 @@ public static class HTreeGenerator
         double size,
         int level,
         int maxDepth,
-        List<Segment> segments)
+        List<Segment> segments,
+        IRecursionTracer? tracer)
     {
         var half = size / 2.0;
+
+        // Дерево рекурсии: один узел = один вызов Build (одна буква H).
+        var node = tracer?.Enter(
+            $"H{level}",
+            $"Build(центр ({cx:0.###}; {cy:0.###}), размер {size:0.###}, уровень {level})") ?? 0;
 
         // Стойка H слева.
         segments.Add(new Segment(
@@ -71,6 +81,7 @@ public static class HTreeGenerator
 
         if (level >= maxDepth)
         {
+            tracer?.Exit(node, RecursionOutcome.BaseCase, "3 отрезка; глубина достигнута — дальше не идём");
             return;
         }
 
@@ -78,10 +89,12 @@ public static class HTreeGenerator
         var childSize = size * ChildScale;
         var nextLevel = level + 1;
 
-        Build(cx - half, cy - half, childSize, nextLevel, maxDepth, segments);
-        Build(cx + half, cy - half, childSize, nextLevel, maxDepth, segments);
-        Build(cx - half, cy + half, childSize, nextLevel, maxDepth, segments);
-        Build(cx + half, cy + half, childSize, nextLevel, maxDepth, segments);
+        Build(cx - half, cy - half, childSize, nextLevel, maxDepth, segments, tracer);
+        Build(cx + half, cy - half, childSize, nextLevel, maxDepth, segments, tracer);
+        Build(cx - half, cy + half, childSize, nextLevel, maxDepth, segments, tracer);
+        Build(cx + half, cy + half, childSize, nextLevel, maxDepth, segments, tracer);
+
+        tracer?.Exit(node, RecursionOutcome.Completed, "3 отрезка + 4 поддерева");
     }
 
     /// <summary>Количество отрезков: 4^(depth+1) - 1.</summary>

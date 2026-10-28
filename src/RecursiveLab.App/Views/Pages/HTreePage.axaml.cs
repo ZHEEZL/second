@@ -8,6 +8,7 @@ using Avalonia.Media;
 using Avalonia.Threading;
 using RecursiveLab.App.Controls;
 using RecursiveLab.App.Services;
+using RecursiveLab.Core.Recursion;
 using RecursiveLab.Core.Geometry;
 using RecursiveLab.Core.Tasks.HTree;
 
@@ -64,6 +65,7 @@ public partial class HTreePage : UserControl
         _speedSlider.ValueChanged += (_, e) => OnSpeedChanged(e.NewValue);
         _playButton.Click += OnPlayClicked;
         _resetButton.Click += OnResetClicked;
+        Get<Button>("RecursionTreeButton").Click += (_, _) => ShowRecursionTree();
         Get<Button>("OpenCodeButton").Click += (_, _) =>
             RepoPaths.ShowInExplorer("src/RecursiveLab.Core/Tasks/HTree/HTreeGenerator.cs");
 
@@ -227,6 +229,18 @@ public partial class HTreePage : UserControl
     }
 
     private void SetHudStatus(string text) => _hudStatus.Text = text;
+
+    private void ShowRecursionTree()
+    {
+        // Тот же самый HTreeGenerator, только с записью каждого вызова Build.
+        var recorder = new RecursionTraceRecorder(
+            $"H-дерево, глубина {_depth}",
+            "Узел — вызов Build(центр, размер, уровень): рисует одну букву H (3 отрезка) и вызывает себя " +
+            "в четырёх её концах. Фиолетовые листья — базовый случай: достигнута заданная глубина.");
+
+        HTreeGenerator.Generate(1.0, _depth, recorder);
+        RecursionTreeWindow.ShowFor(this, recorder.Build());
+    }
 
     private T Get<T>(string name) where T : Control =>
         this.FindControl<T>(name)

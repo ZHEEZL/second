@@ -130,6 +130,18 @@
         </Border>
 
         <Border Classes="card">
+          <StackPanel Spacing="9">
+            <TextBlock Text="ДЕРЕВО РЕКУРСИИ" Classes="section" />
+            <TextBlock Classes="hint"
+                       TextWrapping="Wrap"
+                       Text="Каждый вызов Build — узел дерева: одна буква H и четыре вызова в её концах. Строится для текущей глубины." />
+            <Button Name="RecursionTreeButton"
+                    Content="Показать дерево рекурсии"
+                    HorizontalAlignment="Stretch" />
+          </StackPanel>
+        </Border>
+
+        <Border Classes="card">
           <StackPanel Spacing="8">
             <TextBlock Text="КАК ЭТО РАБОТАЕТ" Classes="section" />
             <TextBlock Classes="hint"

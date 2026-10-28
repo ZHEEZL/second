@@ -1,0 +1,141 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:RecursiveLab.App.Controls"
+        x:Class="RecursiveLab.App.Views.RecursionTreeWindow"
+        Title="Дерево рекурсии"
+        Width="1180"
+        Height="780"
+        MinWidth="860"
+        MinHeight="560"
+        WindowStartupLocation="CenterOwner"
+        Background="#0A0F1E">
+
+  <Grid RowDefinitions="Auto,*,Auto" Margin="16" RowSpacing="12">
+
+    <!-- Заголовок -->
+    <Grid Grid.Row="0" ColumnDefinitions="*,Auto" ColumnSpacing="12">
+      <StackPanel Spacing="4">
+        <TextBlock Name="TitleText" Text="Дерево рекурсии" FontSize="18" FontWeight="SemiBold" />
+        <TextBlock Name="MeaningText" Classes="hint" TextWrapping="Wrap" />
+      </StackPanel>
+      <ComboBox Name="TraceCombo" Grid.Column="1" Width="340" VerticalAlignment="Top" />
+    </Grid>
+
+    <!-- Дерево + панель справа -->
+    <Grid Grid.Row="1" ColumnDefinitions="*,300" ColumnSpacing="14">
+      <Border Classes="card" Padding="0" ClipToBounds="True">
+        <controls:RecursionTreeView Name="TreeView" />
+      </Border>
+
+      <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Spacing="12">
+
+          <Border Classes="card">
+            <StackPanel Spacing="10">
+              <TextBlock Text="СТАТИСТИКА" Classes="section" />
+              <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="10" RowSpacing="10">
+                <StackPanel>
+                  <TextBlock Text="вызовов" Classes="label" />
+                  <TextBlock Name="StatCalls" Text="—" Classes="value" />
+                </StackPanel>
+                <StackPanel Grid.Column="1">
+                  <TextBlock Text="макс. глубина" Classes="label" />
+                  <TextBlock Name="StatDepth" Text="—" Classes="value" />
+                </StackPanel>
+                <StackPanel Grid.Row="1">
+                  <TextBlock Text="базовых случаев" Classes="label" />
+                  <TextBlock Name="StatBase" Text="—" Classes="value" />
+                </StackPanel>
+                <StackPanel Grid.Row="1" Grid.Column="1">
+                  <TextBlock Text="листьев" Classes="label" />
+                  <TextBlock Name="StatLeaves" Text="—" Classes="value" />
+                </StackPanel>
+                <StackPanel Grid.Row="2">
+                  <TextBlock Text="тупиков (откатов)" Classes="label" />
+                  <TextBlock Name="StatDeadEnds" Text="—" Classes="value" />
+                </StackPanel>
+                <StackPanel Grid.Row="2" Grid.Column="1">
+                  <TextBlock Text="сейчас в стеке" Classes="label" />
+                  <TextBlock Name="StatStack" Text="—" Classes="value" />
+                </StackPanel>
+              </Grid>
+              <TextBlock Name="TruncatedText" Classes="hint" Foreground="{StaticResource LabWarning}" IsVisible="False" />
+            </StackPanel>
+          </Border>
+
+          <Border Classes="card">
+            <StackPanel Spacing="6">
+              <TextBlock Name="NodeHeader" Text="ТЕКУЩИЙ ВЫЗОВ" Classes="section" />
+              <TextBlock Name="NodeLabel" Text="—" FontSize="15" FontWeight="SemiBold" TextWrapping="Wrap" />
+              <TextBlock Name="NodeDetail" Classes="hint" />
+              <StackPanel Orientation="Horizontal" Spacing="7">
+                <Ellipse Name="NodeDot" Width="8" Height="8" Fill="{StaticResource LabMuted}" />
+                <TextBlock Name="NodeState" Classes="label" />
+              </StackPanel>
+              <TextBlock Name="NodeResult" Classes="hint" />
+              <TextBlock Name="NodeNote" Classes="hint" Foreground="{StaticResource LabCyan}" />
+              <TextBlock Name="NodePath" Classes="hint" FontSize="11" />
+            </StackPanel>
+          </Border>
+
+          <Border Classes="card">
+            <StackPanel Spacing="7">
+              <TextBlock Text="ЛЕГЕНДА" Classes="section" />
+              <StackPanel Orientation="Horizontal" Spacing="8">
+                <Ellipse Width="10" Height="10" Fill="#22D3EE" />
+                <TextBlock Text="в стеке: вызов ещё работает" Classes="label" />
+              </StackPanel>
+              <StackPanel Orientation="Horizontal" Spacing="8">
+                <Ellipse Width="10" Height="10" Fill="#5B8CFF" />
+                <TextBlock Text="вызов завершён" Classes="label" />
+              </StackPanel>
+              <StackPanel Orientation="Horizontal" Spacing="8">
+                <Ellipse Width="10" Height="10" Fill="#A78BFA" />
+                <TextBlock Text="базовый случай" Classes="label" />
+              </StackPanel>
+              <StackPanel Orientation="Horizontal" Spacing="8">
+                <Ellipse Width="10" Height="10" Fill="#34D399" />
+                <TextBlock Text="ветка привела к решению" Classes="label" />
+              </StackPanel>
+              <StackPanel Orientation="Horizontal" Spacing="8">
+                <Ellipse Width="10" Height="10" Fill="#F87171" />
+                <TextBlock Text="тупик → откат" Classes="label" />
+              </StackPanel>
+              <TextBlock Classes="hint"
+                         Text="Голубая линия — путь от корня до текущего вызова, то есть стек вызовов. Колесо мыши — масштаб, перетаскивание — сдвиг, клик по узлу — подробности." />
+            </StackPanel>
+          </Border>
+
+        </StackPanel>
+      </ScrollViewer>
+    </Grid>
+
+    <!-- Проигрыватель -->
+    <Border Grid.Row="2" Classes="card" Padding="14,10">
+      <Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="12">
+        <StackPanel Orientation="Horizontal" Spacing="6">
+          <Button Name="StartButton" Content="|◀" ToolTip.Tip="В начало" />
+          <Button Name="BackButton" Content="◀" ToolTip.Tip="Шаг назад" />
+          <Button Name="PlayButton" Classes="primary" Content="Пуск" MinWidth="96" />
+          <Button Name="ForwardButton" Content="▶" ToolTip.Tip="Шаг вперёд" />
+          <Button Name="EndButton" Content="▶|" ToolTip.Tip="Всё дерево сразу" />
+        </StackPanel>
+
+        <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
+          <Slider Name="PositionSlider" Minimum="0" Maximum="1" />
+          <TextBlock Name="PositionText" Classes="label" Text="событие 0 / 0" />
+        </StackPanel>
+
+        <StackPanel Grid.Column="2" VerticalAlignment="Center" Width="150" Spacing="2">
+          <Grid ColumnDefinitions="*,Auto">
+            <TextBlock Text="Скорость" Classes="label" />
+            <TextBlock Name="SpeedValue" Grid.Column="1" Classes="accent" Text="×1.00" />
+          </Grid>
+          <Slider Name="SpeedSlider" Minimum="0.25" Maximum="4" Value="1" />
+        </StackPanel>
+
+        <Button Name="FitButton" Grid.Column="3" Content="Вписать" VerticalAlignment="Center" />
+      </Grid>
+    </Border>
+  </Grid>
+</Window>

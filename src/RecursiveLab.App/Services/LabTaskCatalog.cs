@@ -48,6 +48,16 @@ public static class LabTaskCatalog
             () => new Views.Pages.SudokuPage()),
 
         new(
+            "sudoku-gen",
+            "Генератор судоку",
+            "Рекурсия + единственность решения",
+            "участник 2",
+            "O(9^m)",
+            LabTaskStatus.Ready,
+            "#FBBF24",
+            () => new Views.Pages.SudokuGeneratorPage()),
+
+        new(
             "closest",
             "Ближайшая пара",
             "Divide and conquer, O(n log n)",
@@ -66,16 +76,6 @@ public static class LabTaskCatalog
             LabTaskStatus.Ready,
             "#F472B6",
             () => new Views.Pages.HanoiPage()),
-
-        new(
-            "charts",
-            "Замеры",
-            "Графики: эксперимент и модель",
-            "команда",
-            "все алгоритмы",
-            LabTaskStatus.Ready,
-            "#34D399",
-            () => new Views.Pages.ChartsPage()),
     ];
 
     public static string StatusText(LabTaskStatus status) => status switch
